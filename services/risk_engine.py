@@ -51,12 +51,19 @@ _STAGE_PATTERNS = {
 			re.IGNORECASE,
 		),
 		re.compile(
+			r"\b(?:you are|you're)\s+(?:under|facing|involved in|part of)\s+"
+			r"(?:a\s+)?(?:(?:serious|criminal|cybercrime|fraud)\s+){1,2}"
+			r"investigation(?:\s+(?:for|into|involving)\s+[\w -]{1,45})?\b",
+			re.IGNORECASE,
+		),
+		re.compile(
 			r"\b(?:a|an)\s+(?:criminal\s+)?case has been filed against you\b",
 			re.IGNORECASE,
 		),
 		re.compile(
-			r"\byour (?:identity|account|phone number)\s+(?:has been|was)\s+"
-			r"(?:linked to|used in)\s+(?:a\s+)?(?:crime|fraud|criminal case)\b",
+			r"\byour (?:identity|account|phone number|aadhaar number)\s+"
+			r"(?:has been|was)\s+(?:linked to|used in)\s+(?:a\s+)?"
+			r"(?:crime|fraud|criminal case|(?:serious\s+)?criminal investigation)\b",
 			re.IGNORECASE,
 		),
 		re.compile(
@@ -103,6 +110,7 @@ _TACTIC_PATTERNS = {
 			r"within (?:the next )?\d+ (?:minutes?|hours?)|before it's too late)\b",
 			re.IGNORECASE,
 		),
+		re.compile(r"\bimmediately\b", re.IGNORECASE),
 	),
 	"authority_impersonation": _AUTHORITY_PATTERNS,
 	"credential_harvesting": (
@@ -131,12 +139,39 @@ _TACTIC_PATTERNS = {
 			re.IGNORECASE,
 		),
 		re.compile(r"\bpay (?:the )?(?:fine|fee) to avoid arrest\b", re.IGNORECASE),
+		re.compile(
+			r"\b(?:pay|make (?:the )?payment|transfer (?:the )?money|send (?:the )?money)\b"
+			r"[^.!?\n]{0,60}\b(?:or else|otherwise|or you will|or you'll|or we will|"
+			r"or we'll|or face|or you face|or your account|to avoid|to prevent)\b"
+			r"[^.!?\n]{0,60}\b(?:arrest(?:ed)?|jail(?:ed)?|prosecution|legal action|"
+			r"account (?:will be )?(?:blocked|frozen)|penalty|case)\b",
+			re.IGNORECASE,
+		),
+		re.compile(
+			r"\b(?:failure|refusal) to pay\b[^.!?\n]{0,60}"
+			r"\b(?:arrest(?:ed)?|jail(?:ed)?|prosecution|legal action|"
+			r"account (?:will be )?(?:blocked|frozen)|penalty|case)\b",
+			re.IGNORECASE,
+		),
+		re.compile(
+			r"\b(?:pay|transfer|send)\s+(?:₹|rs\.?|inr)\s?[\d,]+\b"
+			r"[^.!?\n]{0,80}\b(?:to avoid|otherwise|or else|or you will|or you'll|"
+			r"or we will|or we'll|or face)\b[^.!?\n]{0,50}"
+			r"\b(?:arrest(?:ed)?|jail(?:ed)?|prosecution|legal action|penalty)\b",
+			re.IGNORECASE,
+		),
 	),
 	"secrecy": (
 		re.compile(
 			r"\b(?:keep this confidential|keep this secret|do not discuss this|"
 			r"don't discuss this|do not tell anyone|don't tell anyone|"
 			r"do not inform your family|don't inform your family)\b",
+			re.IGNORECASE,
+		),
+		re.compile(
+			r"\b(?:confidential investigation|keep (?:this|the investigation|"
+			r"this investigation) confidential|(?:this|the) investigation is "
+			r"(?:strictly )?confidential)\b",
 			re.IGNORECASE,
 		),
 	),
