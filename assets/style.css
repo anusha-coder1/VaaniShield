@@ -1,0 +1,1120 @@
+/* ========================================================================== */
+/* 1. Theme tokens                                                            */
+/* Set data-theme="light" or data-theme="dark" on the document root.          */
+/* ========================================================================== */
+:root,
+:root[data-theme="light"] {
+	color-scheme: light;
+
+	--vs-bg: #f3f7f6;
+	--vs-bg-top: #f8fbfa;
+	--vs-surface: #ffffff;
+	--vs-surface-raised: #ffffff;
+	--vs-surface-muted: #eaf2f1;
+	--vs-surface-hover: #f2f8f7;
+	--vs-border: #d7e3e1;
+	--vs-border-strong: #bdcfcc;
+	--vs-text: #1c2b2e;
+	--vs-text-muted: #52666a;
+	--vs-text-subtle: #718589;
+	--vs-accent: #087f82;
+	--vs-accent-hover: #06696d;
+	--vs-accent-contrast: #ffffff;
+	--vs-accent-soft: #e0f2f0;
+	--vs-focus: #087f82;
+	--vs-button-primary: #087f82;
+	--vs-button-primary-hover: #06696d;
+	--vs-button-primary-disabled: #05575b;
+	--vs-shadow-sm: 0 1px 3px rgb(22 48 52 / 7%);
+	--vs-shadow-md: 0 8px 24px rgb(22 48 52 / 8%);
+	--vs-shadow-focus: 0 0 0 3px rgb(8 127 130 / 20%);
+
+	--vs-low: #18764f;
+	--vs-low-bg: #e9f5ee;
+	--vs-low-border: #b8dfc7;
+	--vs-medium: #805d08;
+	--vs-medium-bg: #fbf3d9;
+	--vs-medium-border: #ead99c;
+	--vs-high: #a64b13;
+	--vs-high-bg: #fff0e3;
+	--vs-high-border: #f2c5a0;
+	--vs-critical: #a8323c;
+	--vs-critical-bg: #fcebed;
+	--vs-critical-border: #edb9bf;
+
+	--vs-radius-sm: 6px;
+	--vs-radius-md: 10px;
+	--vs-radius-lg: 14px;
+	--vs-space-1: 0.25rem;
+	--vs-space-2: 0.5rem;
+	--vs-space-3: 0.75rem;
+	--vs-space-4: 1rem;
+	--vs-space-5: 1.5rem;
+	--vs-space-6: 2rem;
+}
+
+:root[data-theme="dark"] {
+	color-scheme: dark;
+
+	--vs-bg: #09151b;
+	--vs-bg-top: #0c1b22;
+	--vs-surface: #10232b;
+	--vs-surface-raised: #142a33;
+	--vs-surface-muted: #172f38;
+	--vs-surface-hover: #1b3740;
+	--vs-border: #29434b;
+	--vs-border-strong: #3a5b63;
+	--vs-text: #edf5f5;
+	--vs-text-muted: #b1c4c7;
+	--vs-text-subtle: #91a9ad;
+	--vs-accent: #50c8bd;
+	--vs-accent-hover: #76dbd1;
+	--vs-accent-contrast: #062522;
+	--vs-accent-soft: #173c3d;
+	--vs-focus: #69d7cd;
+	--vs-button-primary: #087f82;
+	--vs-button-primary-hover: #06696d;
+	--vs-button-primary-disabled: #05575b;
+	--vs-shadow-sm: 0 1px 4px rgb(0 0 0 / 24%);
+	--vs-shadow-md: 0 10px 28px rgb(0 0 0 / 28%);
+	--vs-shadow-focus: 0 0 0 3px rgb(80 200 189 / 24%);
+
+	--vs-low: #74d6a1;
+	--vs-low-bg: #17372b;
+	--vs-low-border: #2e694d;
+	--vs-medium: #f0cc69;
+	--vs-medium-bg: #3c321b;
+	--vs-medium-border: #76602b;
+	--vs-high: #ffad76;
+	--vs-high-bg: #432b1e;
+	--vs-high-border: #805033;
+	--vs-critical: #ff929a;
+	--vs-critical-bg: #42242a;
+	--vs-critical-border: #7d3b45;
+}
+
+/* ========================================================================== */
+/* 2. Global foundation                                                       */
+/* ========================================================================== */
+html,
+body,
+[data-testid="stAppViewContainer"],
+.stApp {
+	background: var(--vs-bg);
+	color: var(--vs-text);
+}
+
+html,
+body,
+.stApp,
+button,
+input,
+textarea,
+select {
+	font-family: "Aptos", "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+}
+
+body {
+	font-feature-settings: "kern" 1, "liga" 1;
+}
+
+.stApp {
+	background-image: linear-gradient(180deg, var(--vs-bg-top), var(--vs-bg) 34rem);
+}
+
+.block-container {
+	width: calc(100% - 3.5rem);
+	max-width: none;
+	padding: 0.85rem 0 3rem;
+}
+
+p,
+li,
+label,
+[data-testid="stCaptionContainer"] {
+	color: var(--vs-text-muted);
+	line-height: 1.6;
+}
+
+a {
+	color: var(--vs-accent);
+	text-decoration-thickness: 1px;
+	text-underline-offset: 3px;
+}
+
+a:hover {
+	color: var(--vs-accent-hover);
+}
+
+hr,
+[data-testid="stDivider"] {
+	border-color: var(--vs-border) !important;
+}
+
+::selection {
+	background: var(--vs-accent-soft);
+	color: var(--vs-text);
+}
+
+/* ========================================================================== */
+/* 3. Streamlit chrome                                                        */
+/* ========================================================================== */
+section[data-testid="stSidebar"] {
+	display: none !important;
+}
+
+[data-testid="stSidebarCollapsedControl"],
+[data-testid="stToolbar"],
+[data-testid="stDecoration"] {
+	display: none !important;
+}
+
+header[data-testid="stHeader"] {
+	background: transparent;
+	height: 0;
+}
+
+header[data-testid="stHeader"] [data-testid="stToolbar"] {
+	display: none !important;
+}
+
+/* ========================================================================== */
+/* 4. Header and section headings                                              */
+/* ========================================================================== */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	color: var(--vs-text);
+	font-weight: 650;
+	letter-spacing: 0;
+	line-height: 1.25;
+}
+
+h1 {
+	font-size: 2.25rem;
+	letter-spacing: -0.025em;
+}
+
+h2 {
+	font-size: 1.65rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+}
+
+h4,
+h5,
+h6 {
+	font-size: 1rem;
+}
+
+[data-testid="stHeaderActionElements"] {
+	display: none !important;
+}
+
+.vs-header {
+	margin-bottom: var(--vs-space-6);
+}
+
+.vs-eyebrow {
+	color: var(--vs-accent);
+	font-size: 0.75rem;
+	font-weight: 750;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+}
+
+.vs-page-title {
+	margin: 0.25rem 0 0.5rem;
+}
+
+.vs-section-heading {
+	margin: 1.75rem 0 0.75rem;
+}
+
+/* ========================================================================== */
+/* 5. Buttons                                                                 */
+/* ========================================================================== */
+button,
+[data-testid="stBaseButton-primary"],
+[data-testid="stBaseButton-secondary"] {
+	border-radius: var(--vs-radius-sm) !important;
+	font-weight: 650 !important;
+	transition:
+		background-color 160ms ease,
+		border-color 160ms ease,
+		box-shadow 160ms ease,
+		color 160ms ease,
+		transform 160ms ease !important;
+}
+
+button[kind="primary"],
+[data-testid="stBaseButton-primary"],
+div[data-testid="stFormSubmitButton"] button {
+	background: var(--vs-button-primary) !important;
+	border: 1px solid var(--vs-button-primary) !important;
+	color: #ffffff !important;
+}
+
+button[kind="primary"]:hover,
+[data-testid="stBaseButton-primary"]:hover,
+div[data-testid="stFormSubmitButton"] button:hover {
+	background: var(--vs-button-primary-hover) !important;
+	border-color: var(--vs-button-primary-hover) !important;
+	color: #ffffff !important;
+	transform: translateY(-1px);
+}
+
+button[kind="primary"]:focus-visible,
+[data-testid="stBaseButton-primary"]:focus-visible,
+div[data-testid="stFormSubmitButton"] button:focus-visible {
+	background: var(--vs-button-primary) !important;
+	border-color: var(--vs-button-primary) !important;
+	color: #ffffff !important;
+}
+
+button:disabled[kind="primary"],
+button:disabled[data-testid="stBaseButton-primary"],
+button[kind="primary"][disabled],
+[data-testid="stBaseButton-primary"]:disabled,
+[data-testid="stBaseButton-primary"][disabled],
+div[data-testid="stFormSubmitButton"] button:disabled,
+div[data-testid="stFormSubmitButton"] button[disabled],
+button[kind="primary"][aria-disabled="true"],
+[data-testid="stBaseButton-primary"][aria-disabled="true"] {
+	background: var(--vs-button-primary-disabled) !important;
+	border-color: var(--vs-button-primary-disabled) !important;
+	color: #ffffff !important;
+	-webkit-text-fill-color: #ffffff !important;
+	cursor: not-allowed;
+	opacity: 1 !important;
+	transform: none;
+}
+
+button:disabled[kind="primary"] *,
+button:disabled[data-testid="stBaseButton-primary"] *,
+[data-testid="stBaseButton-primary"]:disabled *,
+div[data-testid="stFormSubmitButton"] button:disabled * {
+	color: #ffffff !important;
+	-webkit-text-fill-color: #ffffff !important;
+}
+
+/* Streamlit form buttons use primaryFormSubmit and render their label in a p. */
+div[data-testid="stFormSubmitButton"] button[kind="primaryFormSubmit"],
+div[data-testid="stFormSubmitButton"] button[data-testid="stBaseButton-primaryFormSubmit"] {
+	color: #ffffff !important;
+	-webkit-text-fill-color: #ffffff !important;
+}
+
+div[data-testid="stFormSubmitButton"] button[kind="primaryFormSubmit"]:hover,
+div[data-testid="stFormSubmitButton"] button[kind="primaryFormSubmit"]:active,
+div[data-testid="stFormSubmitButton"] button[kind="primaryFormSubmit"]:focus,
+div[data-testid="stFormSubmitButton"] button[kind="primaryFormSubmit"]:focus-visible,
+div[data-testid="stFormSubmitButton"] button[data-testid="stBaseButton-primaryFormSubmit"]:hover,
+div[data-testid="stFormSubmitButton"] button[data-testid="stBaseButton-primaryFormSubmit"]:active,
+div[data-testid="stFormSubmitButton"] button[data-testid="stBaseButton-primaryFormSubmit"]:focus,
+div[data-testid="stFormSubmitButton"] button[data-testid="stBaseButton-primaryFormSubmit"]:focus-visible {
+	color: #ffffff !important;
+	-webkit-text-fill-color: #ffffff !important;
+}
+
+div[data-testid="stFormSubmitButton"] button[kind="primaryFormSubmit"]:disabled,
+div[data-testid="stFormSubmitButton"] button[kind="primaryFormSubmit"][disabled],
+div[data-testid="stFormSubmitButton"] button[kind="primaryFormSubmit"][aria-disabled="true"],
+div[data-testid="stFormSubmitButton"] button[data-testid="stBaseButton-primaryFormSubmit"]:disabled,
+div[data-testid="stFormSubmitButton"] button[data-testid="stBaseButton-primaryFormSubmit"][disabled],
+div[data-testid="stFormSubmitButton"] button[data-testid="stBaseButton-primaryFormSubmit"][aria-disabled="true"] {
+	color: #ffffff !important;
+	-webkit-text-fill-color: #ffffff !important;
+}
+
+div[data-testid="stFormSubmitButton"] button[kind="primaryFormSubmit"] *,
+div[data-testid="stFormSubmitButton"] button[data-testid="stBaseButton-primaryFormSubmit"] * {
+	color: #ffffff !important;
+	-webkit-text-fill-color: #ffffff !important;
+}
+
+button[kind="secondary"],
+[data-testid="stBaseButton-secondary"] {
+	background: var(--vs-surface) !important;
+	border: 1px solid var(--vs-border-strong) !important;
+	color: var(--vs-text) !important;
+}
+
+button[kind="secondary"]:hover,
+[data-testid="stBaseButton-secondary"]:hover {
+	background: var(--vs-surface-hover) !important;
+	border-color: var(--vs-accent) !important;
+	color: var(--vs-accent) !important;
+}
+
+/* ========================================================================== */
+/* 6. Text areas and input fields                                              */
+/* ========================================================================== */
+input,
+textarea,
+select,
+[data-baseweb="select"] > div,
+[data-baseweb="input"] > div,
+[data-baseweb="textarea"] > div {
+	background-color: var(--vs-surface) !important;
+	border-color: var(--vs-border-strong) !important;
+	border-radius: var(--vs-radius-sm) !important;
+	color: var(--vs-text) !important;
+	transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+textarea,
+div[data-testid="stTextArea"] textarea {
+	line-height: 1.6;
+	min-height: 7rem;
+	resize: vertical;
+}
+
+input::placeholder,
+textarea::placeholder {
+	color: var(--vs-text-subtle) !important;
+	opacity: 1;
+}
+
+input:focus,
+textarea:focus,
+select:focus,
+[data-baseweb="select"] > div:focus-within,
+[data-baseweb="input"] > div:focus-within,
+[data-baseweb="textarea"] > div:focus-within {
+	border-color: var(--vs-focus) !important;
+	box-shadow: var(--vs-shadow-focus) !important;
+	outline: none;
+}
+
+label,
+[data-testid="stWidgetLabel"] {
+	color: var(--vs-text) !important;
+	font-weight: 600;
+}
+
+/* ========================================================================== */
+/* 7. Statistic cards and analysis result surfaces                            */
+/* ========================================================================== */
+[data-testid="stMetric"],
+.vs-stat-card,
+.vs-analysis-card,
+.vs-result-card {
+	background: var(--vs-surface);
+	border: 1px solid var(--vs-border);
+	border-radius: var(--vs-radius-md);
+	box-shadow: var(--vs-shadow-sm);
+}
+
+[data-testid="stMetric"] {
+	padding: 1rem 1.1rem;
+}
+
+[data-testid="stMetricLabel"] {
+	color: var(--vs-text-muted) !important;
+	font-size: 0.82rem;
+	font-weight: 600;
+}
+
+[data-testid="stMetricValue"] {
+	color: var(--vs-text) !important;
+	font-size: 1.75rem;
+	font-weight: 700;
+}
+
+.vs-stat-card,
+.vs-analysis-card,
+.vs-result-card {
+	padding: 1.25rem;
+}
+
+.vs-analysis-card,
+.vs-result-card {
+	animation: vs-enter 240ms ease-out both;
+}
+
+/* ========================================================================== */
+/* 8. Risk indicators and badges                                               */
+/* ========================================================================== */
+.vs-risk,
+.vs-badge {
+	align-items: center;
+	border: 1px solid transparent;
+	border-radius: 999px;
+	display: inline-flex;
+	font-size: 0.78rem;
+	font-weight: 700;
+	gap: 0.4rem;
+	line-height: 1.25;
+	padding: 0.35rem 0.65rem;
+}
+
+.vs-risk--low,
+.vs-badge--low {
+	background: var(--vs-low-bg);
+	border-color: var(--vs-low-border);
+	color: var(--vs-low);
+}
+
+.vs-risk--medium,
+.vs-badge--medium {
+	background: var(--vs-medium-bg);
+	border-color: var(--vs-medium-border);
+	color: var(--vs-medium);
+}
+
+.vs-risk--high,
+.vs-badge--high {
+	background: var(--vs-high-bg);
+	border-color: var(--vs-high-border);
+	color: var(--vs-high);
+}
+
+.vs-risk--critical,
+.vs-badge--critical {
+	background: var(--vs-critical-bg);
+	border-color: var(--vs-critical-border);
+	color: var(--vs-critical);
+}
+
+.vs-badge {
+	background: var(--vs-accent-soft);
+	border-color: var(--vs-border);
+	color: var(--vs-accent);
+}
+
+/* ========================================================================== */
+/* 9. Progress bars                                                            */
+/* ========================================================================== */
+[data-testid="stProgress"] > div {
+	background: var(--vs-surface-muted);
+	border-radius: 999px;
+	height: 0.55rem;
+	overflow: hidden;
+}
+
+[data-testid="stProgress"] [role="progressbar"] > div {
+	background: var(--vs-accent);
+	border-radius: 999px;
+}
+
+.vs-progress {
+	accent-color: var(--vs-accent);
+	width: 100%;
+}
+
+/* ========================================================================== */
+/* 10. Expandable sections                                                     */
+/* ========================================================================== */
+details,
+[data-testid="stExpander"] {
+	background: var(--vs-surface);
+	border: 1px solid var(--vs-border) !important;
+	border-radius: var(--vs-radius-md) !important;
+	box-shadow: var(--vs-shadow-sm);
+}
+
+[data-testid="stExpander"] summary,
+details > summary {
+	color: var(--vs-text);
+	font-weight: 650;
+}
+
+[data-testid="stExpander"] summary:hover,
+details > summary:hover {
+	color: var(--vs-accent);
+}
+
+/* ========================================================================== */
+/* 11. Notifications and alerts                                                */
+/* ========================================================================== */
+[data-testid="stAlert"],
+[data-baseweb="notification"],
+.vs-notice {
+	background: var(--vs-surface);
+	border: 1px solid var(--vs-border);
+	border-radius: var(--vs-radius-md);
+	box-shadow: var(--vs-shadow-sm);
+	color: var(--vs-text);
+}
+
+[data-testid="stAlert"] p,
+[data-baseweb="notification"] p {
+	color: inherit;
+}
+
+.vs-notice--info {
+	background: var(--vs-accent-soft);
+	border-color: var(--vs-border-strong);
+}
+
+.vs-notice--warning {
+	background: var(--vs-medium-bg);
+	border-color: var(--vs-medium-border);
+	color: var(--vs-medium);
+}
+
+.vs-notice--danger {
+	background: var(--vs-critical-bg);
+	border-color: var(--vs-critical-border);
+	color: var(--vs-critical);
+}
+
+/* ========================================================================== */
+/* 12. Code, tables, hover and keyboard focus                                  */
+/* ========================================================================== */
+pre,
+code,
+[data-testid="stCode"] {
+	background: var(--vs-surface-muted) !important;
+	border: 1px solid var(--vs-border) !important;
+	border-radius: var(--vs-radius-sm) !important;
+	color: var(--vs-text) !important;
+}
+
+[data-testid="stDataFrame"],
+[data-testid="stTable"] {
+	border: 1px solid var(--vs-border);
+	border-radius: var(--vs-radius-md);
+	overflow: hidden;
+}
+
+button:focus-visible,
+a:focus-visible,
+summary:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+[tabindex]:focus-visible {
+	box-shadow: var(--vs-shadow-focus) !important;
+	outline: 2px solid var(--vs-focus) !important;
+	outline-offset: 2px !important;
+}
+
+/* ========================================================================== */
+/* 13. Motion and responsive layouts                                           */
+/* ========================================================================== */
+@keyframes vs-enter {
+	from {
+		opacity: 0;
+		transform: translateY(5px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@media (max-width: 900px) {
+	.block-container {
+		width: min(100% - 2.25rem, 76rem);
+		padding-top: 2rem;
+	}
+
+	[data-testid="stMetric"] {
+		padding: 0.9rem;
+	}
+}
+
+@media (max-width: 640px) {
+	.block-container {
+		width: calc(100% - 1.5rem);
+		padding-top: 1.25rem;
+		padding-bottom: 2rem;
+	}
+
+	h1 {
+		font-size: 1.8rem;
+	}
+
+	h2 {
+		font-size: 1.4rem;
+	}
+
+	[data-testid="stMetric"] {
+		padding: 0.75rem;
+	}
+
+	[data-testid="stMetricValue"] {
+		font-size: 1.4rem;
+	}
+
+	.vs-stat-card,
+	.vs-analysis-card,
+	.vs-result-card {
+		padding: 1rem;
+	}
+
+	div[data-testid="stFormSubmitButton"] button {
+		min-height: 2.75rem;
+		width: 100%;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		scroll-behavior: auto !important;
+		transition-duration: 0.01ms !important;
+	}
+}
+
+/* ========================================================================== */
+/* 14. VaaniShield application shell                                           */
+/* ========================================================================== */
+.vs-brand {
+	align-items: center;
+	display: flex;
+	gap: 0.75rem;
+	margin: 0;
+}
+
+.vs-brand-mark {
+	align-items: center;
+	aspect-ratio: 1;
+	background: var(--vs-accent);
+	border: 1px solid var(--vs-accent);
+	border-radius: 9px 9px 9px 3px;
+	color: #ffffff;
+	display: inline-flex;
+	font-size: 1.1rem;
+	font-weight: 800;
+	justify-content: center;
+	width: 2.35rem;
+}
+
+.vs-brand strong,
+.vs-brand small {
+	display: block;
+}
+
+.vs-brand strong {
+	color: var(--vs-text);
+	font-size: 1rem;
+	font-weight: 750;
+}
+
+.vs-brand small {
+	color: var(--vs-text-subtle);
+	font-size: 0.61rem;
+	font-weight: 700;
+	letter-spacing: 0.075em;
+	margin-top: 0.15rem;
+}
+
+.vs-top-brand {
+	min-height: 3.1rem;
+}
+
+.vs-header-status {
+	align-items: center;
+	color: var(--vs-text-muted);
+	display: flex;
+	font-size: 0.78rem;
+	gap: 0.55rem;
+	justify-content: flex-end;
+	white-space: nowrap;
+}
+
+.vs-header-status strong {
+	color: var(--vs-text);
+	font-weight: 650;
+}
+
+.vs-header-separator {
+	color: var(--vs-border-strong);
+}
+
+.vs-header-rule {
+	border-top: 1px solid var(--vs-border);
+	margin: 0.25rem 0 0.7rem;
+}
+
+/* Streamlit container key creates this stable class for the horizontal nav. */
+.st-key-vs-horizontal-nav {
+	align-items: center;
+	border-bottom: 1px solid var(--vs-border);
+	display: flex !important;
+	flex-flow: row nowrap;
+	gap: 0.4rem;
+	margin: 0.2rem 0 0.9rem;
+	max-width: 100%;
+	min-width: 0;
+	overflow-x: auto;
+	overflow-y: hidden;
+	overscroll-behavior-x: contain;
+	scrollbar-width: none;
+	width: 100%;
+}
+
+[data-testid="stVerticalBlock"].st-key-vs-horizontal-nav {
+	flex-direction: row !important;
+	flex-wrap: nowrap !important;
+}
+
+.st-key-vs-horizontal-nav::-webkit-scrollbar {
+	display: none;
+}
+
+.st-key-vs-horizontal-nav > [data-testid="stElementContainer"] {
+	flex: 0 0 auto;
+	width: auto !important;
+}
+
+.st-key-vs-horizontal-nav [data-testid="stButton"] button {
+	border-radius: var(--vs-radius-sm) var(--vs-radius-sm) 0 0 !important;
+	justify-content: center;
+	min-height: 2.7rem;
+	padding: 0.55rem 0.9rem;
+	text-align: center;
+	white-space: nowrap;
+}
+
+.st-key-vs-horizontal-nav [data-testid="stBaseButton-secondary"] {
+	background: transparent !important;
+	border-color: transparent !important;
+	box-shadow: none !important;
+	color: var(--vs-text-muted) !important;
+}
+
+.st-key-vs-horizontal-nav [data-testid="stBaseButton-secondary"]:hover {
+	background: var(--vs-surface-hover) !important;
+	border-color: transparent !important;
+	color: var(--vs-accent) !important;
+	transform: translateY(-1px);
+}
+
+.st-key-vs-horizontal-nav [data-testid="stBaseButton-primary"] {
+	background: var(--vs-accent-soft) !important;
+	border: 1px solid var(--vs-border) !important;
+	border-bottom: 2px solid var(--vs-accent) !important;
+	box-shadow: none !important;
+	color: var(--vs-accent) !important;
+	transform: none;
+}
+
+.st-key-vs-horizontal-nav [data-testid="stBaseButton-primary"]:hover {
+	background: var(--vs-accent-soft) !important;
+	border-color: var(--vs-border) !important;
+	border-bottom-color: var(--vs-accent-hover) !important;
+	color: var(--vs-accent-hover) !important;
+}
+
+.st-key-vs-horizontal-nav [data-testid="stButton"] svg,
+.st-key-vs-horizontal-nav [data-testid="stIconMaterial"] {
+	color: currentColor;
+	fill: currentColor;
+}
+
+.vs-system-line {
+	align-items: center;
+	color: var(--vs-text-muted);
+	display: flex;
+	flex-wrap: wrap;
+	font-size: 0.76rem;
+	font-weight: 650;
+	gap: 0.5rem;
+}
+.vs-status-dot {
+	background: var(--vs-accent);
+	border-radius: 50%;
+	box-shadow: 0 0 0 3px var(--vs-accent-soft);
+	display: inline-block;
+	height: 0.48rem;
+	width: 0.48rem;
+}
+
+.vs-divider-dot {
+	color: var(--vs-border-strong);
+}
+
+.vs-page-description {
+	color: var(--vs-text-muted);
+	font-size: 1.02rem;
+	line-height: 1.65;
+	margin: -0.5rem 0 1.5rem;
+	max-width: 52rem;
+}
+
+.vs-system-line {
+	background: var(--vs-surface-muted);
+	border: 1px solid var(--vs-border);
+	border-radius: var(--vs-radius-sm);
+	margin: 0.5rem 0 1.75rem;
+	padding: 0.7rem 0.9rem;
+}
+
+/* ========================================================================== */
+/* 15. Dashboard, activity, and result states                                  */
+/* ========================================================================== */
+.vs-stat-card {
+	display: flex;
+	flex-direction: column;
+	border-top: 2px solid var(--vs-accent);
+	height: 9.5rem;
+}
+
+.vs-stat-heading {
+	align-items: center;
+	display: flex;
+	gap: 0.65rem;
+	min-height: 2rem;
+}
+
+.vs-stat-label {
+	color: var(--vs-text-muted);
+	font-size: 0.76rem;
+	font-weight: 650;
+	line-height: 1.3;
+}
+
+.vs-stat-icon,
+.vs-empty-icon {
+	align-items: center;
+	background: var(--vs-accent-soft);
+	border: 1px solid var(--vs-border);
+	border-radius: var(--vs-radius-sm);
+	color: var(--vs-accent);
+	display: inline-flex;
+	flex: 0 0 2rem;
+	height: 2rem;
+	justify-content: center;
+	width: 2rem;
+}
+
+.vs-stat-icon svg,
+.vs-empty-icon svg {
+	fill: none;
+	height: 1.1rem;
+	stroke: currentColor;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+	stroke-width: 1.7;
+	width: 1.1rem;
+}
+
+.vs-stat-value {
+	color: var(--vs-text);
+	font-size: 2.05rem;
+	font-weight: 750;
+	line-height: 1.2;
+	margin: auto 0 0.15rem;
+}
+
+.vs-stat-detail {
+	color: var(--vs-text-subtle);
+	font-size: 0.75rem;
+	line-height: 1.45;
+}
+
+.vs-empty-state {
+	align-items: center;
+	background: var(--vs-surface);
+	border: 1px solid var(--vs-border);
+	border-radius: var(--vs-radius-md);
+	box-shadow: var(--vs-shadow-sm);
+	display: flex;
+	gap: 0.85rem;
+	color: var(--vs-text-muted);
+	line-height: 1.6;
+	padding: 0.9rem 1rem;
+}
+
+.vs-empty-state strong,
+.vs-empty-state div > span {
+	display: block;
+}
+
+.vs-empty-state strong {
+	color: var(--vs-text);
+	margin-bottom: 0.2rem;
+}
+
+.vs-empty-state div > span {
+	font-size: 0.88rem;
+}
+
+.vs-privacy-note {
+	align-items: center;
+	background: transparent;
+	border: 0;
+	border-left: 2px solid var(--vs-border-strong);
+	border-radius: 0;
+	color: var(--vs-text-muted);
+	display: flex;
+	font-size: 0.8rem;
+	gap: 0.65rem;
+	line-height: 1.5;
+	margin-top: -0.2rem;
+	padding: 0.4rem 0.75rem;
+}
+
+.vs-privacy-mark {
+	align-items: center;
+	background: var(--vs-surface-muted);
+	border-radius: 50%;
+	color: var(--vs-accent);
+	display: inline-flex;
+	flex: 0 0 1.45rem;
+	font-size: 0.78rem;
+	font-weight: 800;
+	height: 1.45rem;
+	justify-content: center;
+}
+
+.vs-activity-time {
+	color: var(--vs-text-subtle);
+	font-size: 0.78rem;
+	font-variant-numeric: tabular-nums;
+}
+
+.vs-result-banner {
+	align-items: center;
+	background: var(--vs-surface);
+	border: 1px solid var(--vs-border);
+	border-left: 4px solid var(--vs-accent);
+	border-radius: var(--vs-radius-md);
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.75rem;
+	justify-content: space-between;
+	margin-bottom: 1rem;
+	padding: 1rem 1.1rem;
+}
+
+.vs-result-banner strong {
+	color: var(--vs-text);
+}
+
+.vs-result-banner--alert {
+	border-left-color: var(--vs-critical);
+}
+
+.vs-result-banner--clear {
+	border-left-color: var(--vs-low);
+}
+
+.vs-risk {
+	text-transform: capitalize;
+}
+
+.vs-badge {
+	margin: 0 0.35rem 0.35rem 0;
+}
+
+/* ========================================================================== */
+/* 16. Threat knowledge and report preparation                                */
+/* ========================================================================== */
+.vs-knowledge-item,
+.vs-pipeline-step {
+	align-items: flex-start;
+	background: var(--vs-surface);
+	border: 1px solid var(--vs-border);
+	border-radius: var(--vs-radius-md);
+	box-shadow: var(--vs-shadow-sm);
+	display: flex;
+	gap: 0.85rem;
+	margin-bottom: 0.75rem;
+	padding: 1rem;
+}
+
+.vs-knowledge-item {
+	min-height: 7rem;
+}
+
+.vs-item-index {
+	align-items: center;
+	background: var(--vs-accent-soft);
+	border: 1px solid var(--vs-border);
+	border-radius: var(--vs-radius-sm);
+	color: var(--vs-accent);
+	display: inline-flex;
+	flex: 0 0 2rem;
+	font-size: 0.72rem;
+	font-weight: 750;
+	height: 2rem;
+	justify-content: center;
+}
+
+.vs-knowledge-item strong,
+.vs-pipeline-step strong {
+	color: var(--vs-text);
+	display: block;
+	font-size: 0.92rem;
+	margin: 0.1rem 0 0.25rem;
+}
+
+.vs-knowledge-item p,
+.vs-pipeline-step p {
+	color: var(--vs-text-muted);
+	font-size: 0.83rem;
+	line-height: 1.5;
+	margin: 0;
+}
+
+.vs-pipeline-step {
+	align-items: center;
+	animation: vs-enter 220ms ease-out both;
+}
+
+.vs-pipeline-step:nth-of-type(2) {
+	animation-delay: 35ms;
+}
+
+.vs-pipeline-step:nth-of-type(3) {
+	animation-delay: 70ms;
+}
+
+.vs-pipeline-step:nth-of-type(4) {
+	animation-delay: 105ms;
+}
+
+@media (max-width: 640px) {
+	.vs-page-description {
+		font-size: 0.94rem;
+	}
+
+	.vs-system-line {
+		align-items: flex-start;
+		font-size: 0.71rem;
+	}
+
+	.vs-stat-card {
+		height: 8.3rem;
+		padding: 0.8rem;
+	}
+
+	.vs-stat-value {
+		font-size: 1.65rem;
+	}
+
+	.vs-stat-label {
+		font-size: 0.7rem;
+	}
+
+	.vs-empty-state {
+		align-items: flex-start;
+	}
+
+	.vs-privacy-note {
+		align-items: flex-start;
+		font-size: 0.76rem;
+	}
+
+	.vs-result-banner {
+		align-items: flex-start;
+		flex-direction: column;
+	}
+
+	.vs-knowledge-item {
+		min-height: 0;
+	}
+}
