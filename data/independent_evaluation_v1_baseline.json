@@ -1,0 +1,311 @@
+{
+  "total_samples": 120,
+  "scam_samples": 60,
+  "genuine_samples": 60,
+  "correct_scam_detections": 1,
+  "missed_scams": 59,
+  "false_alarms": 0,
+  "native_speaker_review_required_samples": 100,
+  "confusion_matrix": {
+    "true_positive": 1,
+    "true_negative": 60,
+    "false_positive": 0,
+    "false_negative": 59
+  },
+  "overall_metrics": {
+    "accuracy": 0.5083333333333333,
+    "precision": 1.0,
+    "recall": 0.016666666666666666,
+    "f1_score": 0.03278688524590164,
+    "false_positive_rate": 0.0,
+    "true_positive_rate": 0.016666666666666666
+  },
+  "stage_wise_performance": {
+    "authority_claim": {
+      "support": 60,
+      "predicted_positive": 1,
+      "confusion_matrix": {
+        "true_positive": 1,
+        "true_negative": 60,
+        "false_positive": 0,
+        "false_negative": 59
+      },
+      "metrics": {
+        "accuracy": 0.5083333333333333,
+        "precision": 1.0,
+        "recall": 0.016666666666666666,
+        "f1_score": 0.03278688524590164,
+        "false_positive_rate": 0.0,
+        "true_positive_rate": 0.016666666666666666
+      }
+    },
+    "accusation": {
+      "support": 34,
+      "predicted_positive": 0,
+      "confusion_matrix": {
+        "true_positive": 0,
+        "true_negative": 86,
+        "false_positive": 0,
+        "false_negative": 34
+      },
+      "metrics": {
+        "accuracy": 0.7166666666666667,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "false_positive_rate": 0.0,
+        "true_positive_rate": 0.0
+      }
+    },
+    "isolation": {
+      "support": 21,
+      "predicted_positive": 3,
+      "confusion_matrix": {
+        "true_positive": 3,
+        "true_negative": 99,
+        "false_positive": 0,
+        "false_negative": 18
+      },
+      "metrics": {
+        "accuracy": 0.85,
+        "precision": 1.0,
+        "recall": 0.14285714285714285,
+        "f1_score": 0.25,
+        "false_positive_rate": 0.0,
+        "true_positive_rate": 0.14285714285714285
+      }
+    },
+    "payment_demand": {
+      "support": 32,
+      "predicted_positive": 1,
+      "confusion_matrix": {
+        "true_positive": 0,
+        "true_negative": 87,
+        "false_positive": 1,
+        "false_negative": 32
+      },
+      "metrics": {
+        "accuracy": 0.725,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "false_positive_rate": 0.011363636363636364,
+        "true_positive_rate": 0.0
+      }
+    }
+  },
+  "tactic_wise_performance": {
+    "urgency": {
+      "support": 24,
+      "predicted_positive": 11,
+      "confusion_matrix": {
+        "true_positive": 9,
+        "true_negative": 94,
+        "false_positive": 2,
+        "false_negative": 15
+      },
+      "metrics": {
+        "accuracy": 0.8583333333333333,
+        "precision": 0.8181818181818182,
+        "recall": 0.375,
+        "f1_score": 0.5142857142857142,
+        "false_positive_rate": 0.020833333333333332,
+        "true_positive_rate": 0.375
+      }
+    },
+    "authority_based_coercion": {
+      "support": 41,
+      "predicted_positive": 0,
+      "confusion_matrix": {
+        "true_positive": 0,
+        "true_negative": 79,
+        "false_positive": 0,
+        "false_negative": 41
+      },
+      "metrics": {
+        "accuracy": 0.6583333333333333,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "false_positive_rate": 0.0,
+        "true_positive_rate": 0.0
+      }
+    },
+    "credential_harvesting": {
+      "support": 18,
+      "predicted_positive": 1,
+      "confusion_matrix": {
+        "true_positive": 1,
+        "true_negative": 102,
+        "false_positive": 0,
+        "false_negative": 17
+      },
+      "metrics": {
+        "accuracy": 0.8583333333333333,
+        "precision": 1.0,
+        "recall": 0.05555555555555555,
+        "f1_score": 0.10526315789473684,
+        "false_positive_rate": 0.0,
+        "true_positive_rate": 0.05555555555555555
+      }
+    },
+    "payment_pressure": {
+      "support": 10,
+      "predicted_positive": 3,
+      "confusion_matrix": {
+        "true_positive": 2,
+        "true_negative": 109,
+        "false_positive": 1,
+        "false_negative": 8
+      },
+      "metrics": {
+        "accuracy": 0.925,
+        "precision": 0.6666666666666666,
+        "recall": 0.2,
+        "f1_score": 0.30769230769230765,
+        "false_positive_rate": 0.00909090909090909,
+        "true_positive_rate": 0.2
+      }
+    },
+    "secrecy": {
+      "support": 19,
+      "predicted_positive": 1,
+      "confusion_matrix": {
+        "true_positive": 1,
+        "true_negative": 101,
+        "false_positive": 0,
+        "false_negative": 18
+      },
+      "metrics": {
+        "accuracy": 0.85,
+        "precision": 1.0,
+        "recall": 0.05263157894736842,
+        "f1_score": 0.1,
+        "false_positive_rate": 0.0,
+        "true_positive_rate": 0.05263157894736842
+      }
+    }
+  },
+  "language_performance": {
+    "English": {
+      "total_samples": 20,
+      "scam_samples": 10,
+      "genuine_samples": 10,
+      "native_speaker_review_required_samples": 0,
+      "confusion_matrix": {
+        "true_positive": 1,
+        "true_negative": 10,
+        "false_positive": 0,
+        "false_negative": 9
+      },
+      "metrics": {
+        "accuracy": 0.55,
+        "precision": 1.0,
+        "recall": 0.1,
+        "f1_score": 0.18181818181818182,
+        "false_positive_rate": 0.0,
+        "true_positive_rate": 0.1
+      }
+    },
+    "Hindi": {
+      "total_samples": 20,
+      "scam_samples": 10,
+      "genuine_samples": 10,
+      "native_speaker_review_required_samples": 20,
+      "confusion_matrix": {
+        "true_positive": 0,
+        "true_negative": 10,
+        "false_positive": 0,
+        "false_negative": 10
+      },
+      "metrics": {
+        "accuracy": 0.5,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "false_positive_rate": 0.0,
+        "true_positive_rate": 0.0
+      }
+    },
+    "Indian code-mixed speech": {
+      "total_samples": 20,
+      "scam_samples": 10,
+      "genuine_samples": 10,
+      "native_speaker_review_required_samples": 20,
+      "confusion_matrix": {
+        "true_positive": 0,
+        "true_negative": 10,
+        "false_positive": 0,
+        "false_negative": 10
+      },
+      "metrics": {
+        "accuracy": 0.5,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "false_positive_rate": 0.0,
+        "true_positive_rate": 0.0
+      }
+    },
+    "Malayalam": {
+      "total_samples": 20,
+      "scam_samples": 10,
+      "genuine_samples": 10,
+      "native_speaker_review_required_samples": 20,
+      "confusion_matrix": {
+        "true_positive": 0,
+        "true_negative": 10,
+        "false_positive": 0,
+        "false_negative": 10
+      },
+      "metrics": {
+        "accuracy": 0.5,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "false_positive_rate": 0.0,
+        "true_positive_rate": 0.0
+      }
+    },
+    "Tamil": {
+      "total_samples": 20,
+      "scam_samples": 10,
+      "genuine_samples": 10,
+      "native_speaker_review_required_samples": 20,
+      "confusion_matrix": {
+        "true_positive": 0,
+        "true_negative": 10,
+        "false_positive": 0,
+        "false_negative": 10
+      },
+      "metrics": {
+        "accuracy": 0.5,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "false_positive_rate": 0.0,
+        "true_positive_rate": 0.0
+      }
+    },
+    "Telugu": {
+      "total_samples": 20,
+      "scam_samples": 10,
+      "genuine_samples": 10,
+      "native_speaker_review_required_samples": 20,
+      "confusion_matrix": {
+        "true_positive": 0,
+        "true_negative": 10,
+        "false_positive": 0,
+        "false_negative": 10
+      },
+      "metrics": {
+        "accuracy": 0.5,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "false_positive_rate": 0.0,
+        "true_positive_rate": 0.0
+      }
+    }
+  }
+}
