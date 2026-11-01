@@ -1,36 +1,73 @@
 import re
 
-from models.schemas import AnalysisResult, RiskLevel
+from models.schemas import AnalysisResult, IndicatorEvidence, RiskLevel
 
 
 _AUTHORITY_PATTERNS = (
+	re.compile(r"సైబర్ క్రైమ్ విభాగం నుండి మాట్లాడుతున్నాం"),
 	re.compile(
-		r"\b(?:this is|i am|i'm|we are|we're|calling from)\s+"
-		r"(?:an?\s+)?(?:the\s+)?(?:police(?: department)?|law enforcement|"
-		r"cyber[- ]?crime (?:unit|department)|federal (?:agent|officer)|"
-		r"central bureau of investigation)\b",
+		r"\b(?:i am calling from|i'm calling from|we are calling from|"
+		r"we're calling from|this is|i am|i'm|we are|we're|calling from)\s+"
+		r"(?:an?\s+)?(?:the\s+)?(?:police(?:\s+(?:investigation|crime|cybercrime)\s+"
+		r"(?:unit|department|office))?|cyber[- ]?crime(?:\s+investigation)?\s+"
+		r"(?:unit|department|office)|law enforcement|federal (?:agent|officer)|"
+		r"central bureau of investigation|CBI(?:\s+(?:unit|department|office))?|"
+		r"UIDAI|income tax department|reserve bank of india)\b",
 		re.IGNORECASE,
 	),
 	re.compile(
 		r"\b(?:officer|agent)\s+(?:from|with)\s+(?:the\s+)?"
-		r"(?:police|law enforcement|cyber[- ]?crime (?:unit|department))\b",
+		r"(?:police|law enforcement|cyber[- ]?crime (?:unit|department)|CBI)\b",
 		re.IGNORECASE,
 	),
 	re.compile(
 		r"\byou are speaking to\s+(?:the\s+)?"
-		r"(?:police|law enforcement|cyber[- ]?crime (?:unit|department))\b",
+		r"(?:police|law enforcement|cyber[- ]?crime (?:unit|department)|CBI)\b",
+		re.IGNORECASE,
+	),
+	re.compile(
+		r"\byour case has been transferred to (?:our|the) "
+		r"(?:police|cyber[- ]?crime|criminal investigation)?\s*(?:unit|department|office)\b",
 		re.IGNORECASE,
 	),
 )
 
 _CREDENTIAL_NEGATION_PATTERN = re.compile(
-	r"\b(?:never|do not|don't|should not|shouldn't|must not|mustn't|"
-	r"will not|won't|cannot|can't)\b(?:\s+\w+){0,2}\s*$",
+	r"(?:\b(?:never|do not|don't|should not|shouldn't|must not|mustn't|"
+	r"will not|won't|cannot|can't|not to)\b(?:\s+\w+){0,2}\s*$|"
+	r"చెప్పవద్దు\s*$)",
 	re.IGNORECASE,
 )
 _CREDENTIAL_SCOPE_BOUNDARY_PATTERN = re.compile(
 	r"[.!?;,:\n]|\b(?:but|however|instead|and)\b",
 	re.IGNORECASE,
+)
+_EDUCATIONAL_SCOPE_BOUNDARY_PATTERN = re.compile(
+	r"[.!?;\n]|\b(?:but|however|instead)\b",
+	re.IGNORECASE,
+)
+_EDUCATIONAL_CONTEXT_PATTERN = re.compile(
+	r"\b(?:scam|fraud|cybercrime)[ -]awareness(?:\s+(?:class|lesson|training|exercise))?\b|"
+	r"\b(?:educational|training|cybersecurity)\s+"
+	r"(?:example|discussion|scenario|class|lesson|exercise|material)\b|"
+	r"\b(?:example|sample|hypothetical)\s+(?:scam|fraud|call|script|phrase)\b|"
+	r"\b(?:for example|example script|sample script)\b|"
+	r"\bscammers?\s+(?:often\s+)?(?:say|claim|pretend|ask|use)\b|"
+	r"\b(?:teaching|learning|discussing)\s+about\s+(?:scams?|fraud|digital arrests?)\b|"
+	r"సైబర్ భద్రత తరగతిలో|డిజిటల్ అరెస్ట్ మోసాల గురించి చర్చించాము",
+	re.IGNORECASE,
+)
+
+_NUMBER_WORD_PATTERN = (
+	r"(?:zero|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|"
+	r"thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|"
+	r"thirty|forty|fifty|sixty|seventy|eighty|ninety|hundred|thousand|"
+	r"lakh|lakhs|crore|crores|and)"
+)
+_CURRENCY_AMOUNT_PATTERN = (
+	r"(?:₹\s*[\d,]+|(?:rs\.?|inr)\s*[\d,]+|"
+	r"[\d,]+\s*(?:rupees?|rs\.?|inr)|"
+	rf"{_NUMBER_WORD_PATTERN}(?:[\s-]+{_NUMBER_WORD_PATTERN}){{0,5}}\s+rupees?)"
 )
 
 
@@ -42,9 +79,20 @@ def _is_negated_credential_request(transcript: str, match_start: int) -> bool:
 		preceding_text = preceding_text[boundaries[-1].end():]
 	return bool(_CREDENTIAL_NEGATION_PATTERN.search(preceding_text))
 
+
+def _is_educational_match(transcript: str, match_start: int) -> bool:
+	"""Ignore a match only when its current clause is explicitly educational."""
+	preceding_text = transcript[:match_start]
+	boundaries = list(_EDUCATIONAL_SCOPE_BOUNDARY_PATTERN.finditer(preceding_text))
+	if boundaries:
+		preceding_text = preceding_text[boundaries[-1].end():]
+	return bool(_EDUCATIONAL_CONTEXT_PATTERN.search(preceding_text))
+
+
 _STAGE_PATTERNS = {
 	"authority_claim": _AUTHORITY_PATTERNS,
 	"accusation": (
+		re.compile(r"ఆధార్ నంబర్ క్రిమినల్ దర్యాప్తుతో సంబంధం"),
 		re.compile(
 			r"\b(?:you are|you're)\s+(?:under investigation|being investigated|"
 			r"accused|charged)(?:\s+(?:for|of)\s+[\w -]{1,35})?",
@@ -61,9 +109,19 @@ _STAGE_PATTERNS = {
 			re.IGNORECASE,
 		),
 		re.compile(
-			r"\byour (?:identity|account|phone number|aadhaar number)\s+"
-			r"(?:has been|was)\s+(?:linked to|used in)\s+(?:a\s+)?"
-			r"(?:crime|fraud|criminal case|(?:serious\s+)?criminal investigation)\b",
+			r"\byour\s+(?:(?:aadhaar|aadhar|pan)(?:\s+number)?|bank account|"
+			r"identity|account|phone number)(?:\s+\[REDACTED_AADHAAR\])?\s+"
+			r"(?:is|was|has been)\s+"
+			r"(?:linked to|involved in|used in|used for)\s+(?:a\s+)?"
+			r"(?:(?:serious|illegal|suspicious|criminal|financial)\s+){0,2}"
+			r"(?:criminal investigation|investigation|transactions?|money laundering|"
+			r"financial crime|crime|fraud)\b",
+			re.IGNORECASE,
+		),
+		re.compile(
+			r"\byou (?:are|have been) suspected of "
+			r"(?:participating in|being involved in|involvement in) "
+			r"(?:a\s+)?(?:financial crime|money laundering|fraud|illegal transactions?)\b",
 			re.IGNORECASE,
 		),
 		re.compile(
@@ -72,32 +130,57 @@ _STAGE_PATTERNS = {
 		),
 	),
 	"isolation": (
+		re.compile(r"కాల్ కట్ చేయకండి"),
+		re.compile(r"కుటుంబానికి చెప్పకండి"),
 		re.compile(
 			r"\b(?:do not|don't|never)\s+(?:tell|contact|inform)\s+"
 			r"(?:anyone|anybody|your family|your friends|your bank|the police)\b",
 			re.IGNORECASE,
 		),
 		re.compile(r"\b(?:stay|remain) on (?:the )?line\b", re.IGNORECASE),
-		re.compile(r"\b(?:do not|don't) disconnect\b", re.IGNORECASE),
+		re.compile(r"\b(?:do not|don't) disconnect(?: this call| the call)?\b", re.IGNORECASE),
 		re.compile(r"\bkeep this between us\b", re.IGNORECASE),
 		re.compile(r"\bmove to a private (?:room|location)\b", re.IGNORECASE),
+		re.compile(
+			r"\b(?:you must|you have to|you need to|must|have to) remain "
+			r"on (?:a |the )?video call\b",
+			re.IGNORECASE,
+		),
+		re.compile(
+			r"\b(?:do not|don't|must not|mustn't) discuss "
+			r"(?:this\s+)?(?:investigation|case|conversation) "
+			r"with (?:anyone|anybody|your family|your friends)\b",
+			re.IGNORECASE,
+		),
 	),
 	"payment_demand": (
+		re.compile(r"డబ్బు బదిలీ చేయండి"),
 		re.compile(
 			r"\b(?:transfer|send|deposit)\s+(?:the\s+)?(?:money|funds|amount)\b",
 			re.IGNORECASE,
 		),
 		re.compile(
-			r"\b(?:pay|make)\s+(?:the\s+)?(?:payment|fine|fee)\b",
+			r"\b(?:pay|make)\s+(?:the\s+)?(?:payment|fine|fee|security deposit)\b",
 			re.IGNORECASE,
 		),
 		re.compile(
-			r"\b(?:pay|transfer|send)\s+(?:₹|rs\.?|inr)\s?[\d,]+\b",
+			rf"\b(?:pay|transfer|send|deposit)\s+(?:the\s+)?"
+			rf"{_CURRENCY_AMOUNT_PATTERN}\b",
 			re.IGNORECASE,
 		),
 		re.compile(
-			r"\b(?:pay|transfer|send)\s+(?:the\s+)?"
-			r"[\d,]+\s*(?:rupees|rs\.?|inr)\b",
+			r"\b(?:send|transfer|pay)\s+(?:the\s+)?(?:money|funds|amount)\s+"
+			r"to (?:this|the|our) (?:verification|bank|beneficiary)?\s*account\b",
+			re.IGNORECASE,
+		),
+		re.compile(
+			r"\byour (?:bank )?account (?:will|shall) remain frozen "
+			r"until (?:payment|you pay|the payment)\b",
+			re.IGNORECASE,
+		),
+		re.compile(
+			r"\b(?:transfer|send|pay)\s+(?:the\s+)?(?:amount|money|funds)\s+"
+			r"to avoid arrest\b",
 			re.IGNORECASE,
 		),
 	),
@@ -105,18 +188,32 @@ _STAGE_PATTERNS = {
 
 _TACTIC_PATTERNS = {
 	"urgency": (
+		re.compile(r"వెంటనే"),
+		re.compile(r"ఇప్పుడే"),
 		re.compile(
 			r"\b(?:act now|respond immediately|right now|"
 			r"within (?:the next )?\d+ (?:minutes?|hours?)|before it's too late)\b",
 			re.IGNORECASE,
 		),
+		re.compile(
+			r"\bwithin (?:the next )?(?:one|two|three|four|five|ten|fifteen|"
+			r"twenty|thirty) minutes?\b",
+			re.IGNORECASE,
+		),
+		re.compile(
+			rf"\b(?:you have|you've got)\s+(?:only\s+)?(?:\d+|"
+			rf"{_NUMBER_WORD_PATTERN}(?:[\s-]+{_NUMBER_WORD_PATTERN}){{0,2}})\s+"
+			r"minutes?\b",
+			re.IGNORECASE,
+		),
 		re.compile(r"\bimmediately\b", re.IGNORECASE),
 	),
-	"authority_impersonation": _AUTHORITY_PATTERNS,
+	"authority_impersonation": (),
 	"credential_harvesting": (
+		re.compile(r"మీ\s+OTP\s+చెప్ప(?:ండి|వద్దు)"),
 		re.compile(
 			r"\b(?:share|send|provide|tell me|read out|give me|reveal|disclose|"
-			r"ask(?:s)? for)\s+(?:your\s+)?"
+			r"ask(?:s)? for)\s+(?:your\s+|an?\s+)?"
 			r"(?:otp|one[ -]time password|verification code|password|pin|cvv|"
 			r"card number|bank details|account details)\b",
 			re.IGNORECASE,
@@ -128,6 +225,8 @@ _TACTIC_PATTERNS = {
 		),
 	),
 	"payment_pressure": (
+		re.compile(r"అరెస్టు తప్పించుకోవడానికి\s+వెంటనే\s+డబ్బు బదిలీ చేయండి"),
+		re.compile(r"ఖాతా నిలిపివేయకుండా ఉండాలంటే"),
 		re.compile(r"\bpay (?:now|immediately|right now)\b", re.IGNORECASE),
 		re.compile(
 			r"\b(?:pay|transfer) (?:the )?money (?:now|immediately)\b",
@@ -140,28 +239,51 @@ _TACTIC_PATTERNS = {
 		),
 		re.compile(r"\bpay (?:the )?(?:fine|fee) to avoid arrest\b", re.IGNORECASE),
 		re.compile(
-			r"\b(?:pay|make (?:the )?payment|transfer (?:the )?money|send (?:the )?money)\b"
-			r"[^.!?\n]{0,60}\b(?:or else|otherwise|or you will|or you'll|or we will|"
-			r"or we'll|or face|or you face|or your account|to avoid|to prevent)\b"
-			r"[^.!?\n]{0,60}\b(?:arrest(?:ed)?|jail(?:ed)?|prosecution|legal action|"
-			r"account (?:will be )?(?:blocked|frozen)|penalty|case)\b",
+			r"\b(?:pay|transfer) (?:the )?money\b[^.!?\n]{0,60}"
+			r"\b(?:or else|otherwise|or you will|or you'll|or we will|or we'll|"
+			r"or face|to avoid)\b[^.!?\n]{0,50}"
+			r"\b(?:arrest(?:ed)?|jail(?:ed)?|charged|legal action)\b",
 			re.IGNORECASE,
 		),
 		re.compile(
-			r"\b(?:failure|refusal) to pay\b[^.!?\n]{0,60}"
-			r"\b(?:arrest(?:ed)?|jail(?:ed)?|prosecution|legal action|"
-			r"account (?:will be )?(?:blocked|frozen)|penalty|case)\b",
+			r"\bpay (?:the )?(?:fine|fee|security deposit|payment)\b"
+			r"[^.!?\n]{0,60}\b(?:or else|otherwise|or you will|or you'll|"
+			r"or we will|or we'll|or face|to avoid)\b[^.!?\n]{0,50}"
+			r"\b(?:arrest(?:ed)?|jail(?:ed)?|charged|legal action|prosecution)\b",
 			re.IGNORECASE,
 		),
 		re.compile(
-			r"\b(?:pay|transfer|send)\s+(?:₹|rs\.?|inr)\s?[\d,]+\b"
-			r"[^.!?\n]{0,80}\b(?:to avoid|otherwise|or else|or you will|or you'll|"
-			r"or we will|or we'll|or face)\b[^.!?\n]{0,50}"
+			r"\bpay or (?:you will|you'll|we will|we'll) (?:be )?"
+			r"(?:arrested|jailed|charged)\b",
+			re.IGNORECASE,
+		),
+		re.compile(r"\bpay (?:the )?(?:fine|fee) to avoid arrest\b", re.IGNORECASE),
+		re.compile(
+			rf"\b(?:pay|transfer|send|deposit)\s+(?:the\s+)?"
+			rf"{_CURRENCY_AMOUNT_PATTERN}\b[^.!?\n]{{0,80}}"
+			r"\b(?:to avoid|otherwise|or else|or you will|or you'll|or we will|"
+			r"or we'll|or face)\b[^.!?\n]{0,50}"
 			r"\b(?:arrest(?:ed)?|jail(?:ed)?|prosecution|legal action|penalty)\b",
+			re.IGNORECASE,
+		),
+		re.compile(
+			r"\b(?:pay|transfer|send|deposit)\s+(?:the\s+)?(?:amount|money|funds)\s+"
+			r"to avoid arrest\b",
+			re.IGNORECASE,
+		),
+		re.compile(
+			r"\b(?:pay|make)\s+(?:the\s+)?security deposit\b[^.!?\n]{0,30}"
+			r"\b(?:immediately|now|today|right away)\b",
+			re.IGNORECASE,
+		),
+		re.compile(
+			r"\b(?:your )?(?:bank )?account (?:will|shall) remain frozen "
+			r"until (?:payment|you pay|the payment)\b",
 			re.IGNORECASE,
 		),
 	),
 	"secrecy": (
+		re.compile(r"కుటుంబానికి చెప్పకండి"),
 		re.compile(
 			r"\b(?:keep this confidential|keep this secret|do not discuss this|"
 			r"don't discuss this|do not tell anyone|don't tell anyone|"
@@ -174,25 +296,101 @@ _TACTIC_PATTERNS = {
 			r"(?:strictly )?confidential)\b",
 			re.IGNORECASE,
 		),
+		re.compile(
+			r"\b(?:do not|don't|must not|mustn't) discuss "
+			r"(?:this\s+)?(?:investigation|case|conversation) "
+			r"with (?:anyone|anybody|your family|your friends)\b",
+			re.IGNORECASE,
+		),
 	),
 }
+
+_INDICATOR_EXPLANATIONS = {
+	"authority_claim": (
+		"This phrase presents the caller as an official or institutional representative.",
+		"It could establish false credibility; verify the caller through independently sourced details.",
+	),
+	"accusation": (
+		"This phrase alleges that the person or their identity is linked to a crime or investigation.",
+		"It may be intended to create fear; an accusation alone is not proof of wrongdoing.",
+	),
+	"isolation": (
+		"This phrase discourages ending the call or consulting other people.",
+		"It may limit time for independent verification or trusted advice.",
+	),
+	"payment_demand": (
+		"This phrase requests a payment, transfer, or security deposit.",
+		"Pause before sending money and verify the request with the institution independently.",
+	),
+	"urgency": (
+		"This phrase creates time pressure or asks for immediate action.",
+		"Time pressure can make independent verification more difficult.",
+	),
+	"authority_impersonation": (
+		"This phrase uses language associated with an official authority or agency.",
+		"A caller's claimed role should be verified through an official number you find yourself.",
+	),
+	"credential_harvesting": (
+		"This phrase asks for a credential such as an OTP, PIN, password, or account detail.",
+		"Sharing authentication details can put accounts at risk; legitimate support should not need your OTP or PIN.",
+	),
+	"payment_pressure": (
+		"This phrase connects a payment request to urgency, a threat, or another consequence.",
+		"Do not transfer money based only on a caller's demand; verify the situation independently.",
+	),
+	"secrecy": (
+		"This phrase asks that the matter or investigation be kept confidential.",
+		"Secrecy may discourage outside advice or independent checks.",
+	),
+}
+
+
+def _select_non_redundant_matches(matches):
+	"""Prefer complete phrases while retaining separate, non-contained evidence."""
+	unique_matches = {}
+	for start, end, phrase in matches:
+		unique_matches[(start, end, phrase.casefold())] = (start, end, phrase)
+
+	selected = []
+	for candidate in sorted(unique_matches.values(), key=lambda item: (item[0], -item[1])):
+		start, end, _ = candidate
+		if any(existing_start <= start and existing_end >= end for existing_start, existing_end, _ in selected):
+			continue
+		selected = [
+			existing
+			for existing in selected
+			if not (start <= existing[0] and end >= existing[1])
+		]
+		selected.append(candidate)
+
+	return sorted(selected, key=lambda item: (item[0], item[1]))
 
 
 def analyze_transcript(transcript: str) -> AnalysisResult:
 	"""Return a keyword-based assessment without executing transcript content."""
 	detected_stages = []
 	detected_tactics = []
-	phrase_matches = []
+	indicator_matches = {}
 
 	# Keep only specific phrase matches; a bare mention of police or payment is not enough.
 	for stage, patterns in _STAGE_PATTERNS.items():
-		matches = [match for pattern in patterns for match in pattern.finditer(transcript)]
+		matches = [
+			match
+			for pattern in patterns
+			for match in pattern.finditer(transcript)
+			if not _is_educational_match(transcript, match.start())
+		]
 		if matches:
 			detected_stages.append(stage)
-			phrase_matches.extend((match.start(), match.group(0)) for match in matches)
+			indicator_matches[stage] = matches
 
 	for tactic, patterns in _TACTIC_PATTERNS.items():
-		matches = [match for pattern in patterns for match in pattern.finditer(transcript)]
+		matches = [
+			match
+			for pattern in patterns
+			for match in pattern.finditer(transcript)
+			if not _is_educational_match(transcript, match.start())
+		]
 		if tactic == "credential_harvesting":
 			matches = [
 				match
@@ -201,16 +399,61 @@ def analyze_transcript(transcript: str) -> AnalysisResult:
 			]
 		if matches:
 			detected_tactics.append(tactic)
-			phrase_matches.extend((match.start(), match.group(0)) for match in matches)
+			indicator_matches[tactic] = matches
 
-	# Preserve transcript order and remove duplicate matches shared by stage and tactic rules.
-	exact_phrases = []
-	seen_phrases = set()
-	for _, phrase in sorted(phrase_matches, key=lambda item: item[0]):
-		normalized_phrase = phrase.casefold()
-		if normalized_phrase not in seen_phrases:
-			exact_phrases.append(phrase)
-			seen_phrases.add(normalized_phrase)
+	# An institutional claim becomes impersonation evidence only when separate
+	# coercive or deceptive evidence is also present. This preserves the
+	# distinction between claiming an institution and impersonating one.
+	impersonation_context_indicators = (
+		"accusation",
+		"isolation",
+		"payment_demand",
+		"credential_harvesting",
+		"payment_pressure",
+		"secrecy",
+	)
+	if "authority_claim" in detected_stages and any(
+		indicator in detected_stages + detected_tactics
+		for indicator in impersonation_context_indicators
+	):
+		detected_tactics.append("authority_impersonation")
+		context_matches = [
+			match
+			for indicator in impersonation_context_indicators
+			for match in indicator_matches.get(indicator, [])
+		]
+		indicator_matches["authority_impersonation"] = (
+			indicator_matches["authority_claim"] + context_matches
+		)
+
+	# Remove only fully contained phrase matches; independent evidence stays separate.
+	all_matches = [
+		(match.start(), match.end(), match.group(0))
+		for matches in indicator_matches.values()
+		for match in matches
+	]
+	selected_matches = _select_non_redundant_matches(all_matches)
+	exact_phrases = [phrase for _, _, phrase in selected_matches]
+
+	indicator_evidence = []
+	for indicator in detected_stages + detected_tactics:
+		matches = indicator_matches[indicator]
+		supporting_phrases = [
+			phrase
+			for phrase_start, phrase_end, phrase in selected_matches
+			if any(phrase_start <= match.start() and phrase_end >= match.end() for match in matches)
+		]
+		if not supporting_phrases:
+			continue
+		explanation, potential_risk = _INDICATOR_EXPLANATIONS[indicator]
+		indicator_evidence.append(
+			IndicatorEvidence(
+				indicator=indicator,
+				exact_phrases=supporting_phrases,
+				explanation=explanation,
+				potential_risk=potential_risk,
+			)
+		)
 
 	# An explicit request for credentials is strong evidence; other findings need
 	# coercive or deceptive context before they produce a scam verdict.
@@ -239,7 +482,7 @@ def analyze_transcript(transcript: str) -> AnalysisResult:
 		has_credential_request or has_payment_context or has_authority_context or has_coercive_context
 	)
 
-	# Weights make direct money or credential requests more serious than urgency alone.
+	# Keep the existing indicator weights and risk thresholds unchanged.
 	indicator_weights = {
 		"authority_claim": 1,
 		"accusation": 2,
@@ -283,6 +526,7 @@ def analyze_transcript(transcript: str) -> AnalysisResult:
 		stages_detected=detected_stages,
 		tactics_detected=detected_tactics,
 		exact_phrases=exact_phrases,
+		indicator_evidence=indicator_evidence,
 		confidence=confidence,
 		uncertainty_note=uncertainty_note,
 	)

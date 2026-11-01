@@ -3,3 +3,4 @@ pydantic
 pytest
 python-dotenv
 requests
+mutagen

@@ -3,7 +3,10 @@ from pathlib import Path
 
 import streamlit as st
 
+from models.schemas import RiskLevel
 from services.analyzer import analyze
+from services.evaluation import EvaluationDatasetError, evaluate_dataset
+from services.speech_to_text import SUPPORTED_AUDIO_FORMATS, transcribe_audio
 
 
 NAVIGATION_ITEMS = (
@@ -12,6 +15,7 @@ NAVIGATION_ITEMS = (
 	("Threat Intelligence", ":material/policy:", "threat-intelligence"),
 	("Reports", ":material/description:", "reports"),
 	("How It Works", ":material/account_tree:", "how-it-works"),
+	("Evaluation", ":material/analytics:", "evaluation"),
 )
 
 STAGES = (
@@ -190,8 +194,11 @@ def render_analysis_result(result) -> None:
 	risk_class = result.risk_level.value.lower()
 	status_class = "alert" if result.scam_detected else "clear"
 	status_text = "Scam indicators detected" if result.scam_detected else "No scam indicators detected"
+	evidence_by_indicator = {
+		item.indicator: item for item in result.indicator_evidence
+	}
 
-	st.markdown("### Analysis result")
+	st.markdown("### Overall risk assessment")
 	st.markdown(
 		f'<div class="vs-result-banner vs-result-banner--{status_class}">'
 		f"<strong>{status_text}</strong>"
@@ -202,37 +209,67 @@ def render_analysis_result(result) -> None:
 
 	confidence_column, stage_column, tactic_column = st.columns(3)
 	with confidence_column:
-		st.metric("Baseline confidence", f"{result.confidence:.0%}")
+		st.metric("Baseline confidence (heuristic)", f"{result.confidence:.0%}")
 		st.progress(result.confidence)
 	with stage_column:
 		st.metric("Stages detected", len(result.stages_detected))
 	with tactic_column:
 		st.metric("Tactics detected", len(result.tactics_detected))
 
-	st.markdown("### Indicator breakdown")
+	def render_indicators(title: str, indicator_names: tuple[str, ...]) -> None:
+		st.markdown(f"#### {title}")
+		for indicator in indicator_names:
+			evidence = evidence_by_indicator.get(indicator)
+			label = indicator.replace("_", " ").title()
+			if evidence is None:
+				st.caption(f"{label} — Not detected in the supplied conversation.")
+				continue
+
+			with st.expander(label, expanded=True):
+				for phrase in evidence.exact_phrases:
+					st.code(phrase, language=None)
+				st.write(evidence.explanation)
+				st.caption(f"Potential risk: {evidence.potential_risk}")
+
+	st.markdown("### Scam stages and tactics")
 	stage_column, tactic_column = st.columns(2)
 	with stage_column:
-		st.markdown("#### Scam stages")
-		if result.stages_detected:
-			for stage in result.stages_detected:
-				st.markdown(f'<span class="vs-badge">{stage.replace("_", " ").title()}</span>', unsafe_allow_html=True)
-		else:
-			st.caption("No stages detected.")
+		render_indicators("Stages", tuple(name for name, _ in STAGES))
 	with tactic_column:
-		st.markdown("#### Tactics")
-		if result.tactics_detected:
-			for tactic in result.tactics_detected:
-				st.markdown(f'<span class="vs-badge">{tactic.replace("_", " ").title()}</span>', unsafe_allow_html=True)
-		else:
-			st.caption("No tactics detected.")
+		render_indicators("Tactics", tuple(name for name, _ in TACTICS))
 
-	st.markdown("### Exact matched phrases")
+	st.markdown("### Matched evidence")
 	if result.exact_phrases:
 		for phrase in result.exact_phrases:
 			st.code(phrase, language=None)
 	else:
-		st.caption("No matching phrases found.")
+		st.caption("No matched evidence found in the supplied conversation.")
+
+	if result.risk_level in {RiskLevel.HIGH, RiskLevel.CRITICAL}:
+		st.warning(
+			"Suggested safety actions: if it is safe to do so, end the suspicious call. "
+			"Do not transfer money or share OTPs, PINs, or passwords. Verify claims using "
+			"independently sourced official contact details, and inform someone you trust. "
+			"In India, suspected cyber financial fraud can be reported by calling 1930 or "
+			"visiting cybercrime.gov.in. VaaniShield will not contact anyone or submit a report."
+		)
+	else:
+		st.info(
+			"If anything in the conversation feels unexpected, pause and verify it independently. "
+			"Never share authentication credentials with a caller."
+		)
 	st.info(result.uncertainty_note)
+
+
+def analyze_reviewed_transcript(transcript: str) -> None:
+	if not transcript.strip():
+		st.info("Enter or review a transcript before starting scam analysis.")
+		return
+
+	result = analyze(transcript)
+	record_activity(result)
+	st.divider()
+	render_analysis_result(result)
 
 
 def render_analyze() -> None:
@@ -246,31 +283,84 @@ def render_analyze() -> None:
 		"Never share an OTP, password, PIN, or transfer money based on a caller's instructions."
 	)
 
-	with st.form("transcript_analysis", clear_on_submit=False):
-		transcript = st.text_area(
-			"Suspicious call transcript",
-			height=220,
-			placeholder="Paste or type the conversation you want to review...",
-			help="Do not include credentials you would not want to share. Text is not added to activity summaries or written to app files.",
-			key="analysis_transcript",
-		)
-		submitted = st.form_submit_button(
-			"Analyze Conversation",
-			type="primary",
-			use_container_width=True,
-		)
+	text_tab, audio_tab = st.tabs(["Text transcript", "Audio recording"])
+	with text_tab:
+		with st.form("transcript_analysis", clear_on_submit=False):
+			transcript = st.text_area(
+				"Suspicious call transcript",
+				height=220,
+				placeholder="Paste or type the conversation you want to review...",
+				help="Do not include credentials you would not want to share. Text is not added to activity summaries or written to app files.",
+				key="analysis_transcript",
+			)
+			text_submitted = st.form_submit_button(
+				"Analyze Conversation",
+				type="primary",
+				use_container_width=True,
+			)
 
-	if not submitted:
-		st.caption("The analyzer redacts common sensitive formats before keyword analysis.")
-		return
-	if not transcript.strip():
-		st.info("Enter a transcript above to start the analysis.")
-		return
+		if text_submitted:
+			analyze_reviewed_transcript(transcript)
+		else:
+			st.caption("The analyzer redacts common sensitive formats before keyword analysis.")
 
-	result = analyze(transcript)
-	record_activity(result)
-	st.divider()
-	render_analysis_result(result)
+	with audio_tab:
+		st.warning(
+			"Audio is sent to Gnani's servers for transcription. VaaniShield does not save the uploaded recording to disk. "
+			"Review the transcript before submitting it for analysis."
+		)
+		with st.form("audio_transcription_form", clear_on_submit=False):
+			uploaded_audio = st.file_uploader(
+				"Upload a call recording",
+				type=list(SUPPORTED_AUDIO_FORMATS),
+				help="Supported formats: WAV, MP3, M4A, AAC, FLAC, and OGG.",
+				key="audio_upload",
+			)
+			transcribe_submitted = st.form_submit_button(
+				"Transcribe Audio",
+				type="primary",
+				use_container_width=True,
+			)
+
+		if transcribe_submitted:
+			st.session_state.pop("audio_review_transcript", None)
+			st.session_state.pop("audio_detected_language", None)
+			if uploaded_audio is None:
+				st.info("Choose an audio file before starting transcription.")
+			else:
+				with st.spinner("Transcribing audio with Gnani Prisma v3..."):
+					try:
+						transcription = transcribe_audio(uploaded_audio)
+					except (ValueError, RuntimeError) as error:
+						st.error(str(error))
+					except Exception:
+						st.error(
+							"An unexpected transcription error occurred. Check your connection and try again."
+						)
+					else:
+						st.session_state["audio_review_transcript"] = transcription["transcript"]
+						st.session_state["audio_detected_language"] = transcription.get(
+							"detected_language"
+						)
+
+		if "audio_review_transcript" in st.session_state:
+			detected_language = st.session_state.get("audio_detected_language")
+			if detected_language:
+				st.caption(f"Detected language: {detected_language}")
+			with st.form("reviewed_audio_transcript_form", clear_on_submit=False):
+				reviewed_transcript = st.text_area(
+					"Review and edit the transcription",
+					height=220,
+					key="audio_review_transcript",
+					help="Scam analysis will use this reviewed text, not the original audio.",
+				)
+				analyze_reviewed = st.form_submit_button(
+					"Analyze Reviewed Transcript",
+					type="primary",
+					use_container_width=True,
+				)
+			if analyze_reviewed:
+				analyze_reviewed_transcript(reviewed_transcript)
 
 
 def render_threat_intelligence() -> None:
@@ -405,6 +495,106 @@ def render_how_it_works() -> None:
 	)
 
 
+def render_evaluation() -> None:
+	page_header(
+		"Synthetic regression set",
+		"Detection evaluation",
+		"A transparent summary of current keyword-baseline behavior on manually labelled synthetic conversations.",
+	)
+	st.warning(
+		"This small synthetic evaluation is not real-world validated performance. "
+		"Hindi, Telugu, Tamil, Malayalam, and code-mixed examples require native-speaker review. "
+		"Weak results are shown as measured; no samples are skipped."
+	)
+
+	try:
+		report = evaluate_dataset()
+	except EvaluationDatasetError as error:
+		st.error(f"Evaluation could not be completed: {error}")
+		return
+
+	st.markdown("### Dataset summary")
+	summary_columns = st.columns(5)
+	summary_values = (
+		("Total samples", report["total_samples"]),
+		("Scam samples", report["scam_samples"]),
+		("Genuine samples", report["genuine_samples"]),
+		("Correct scam detections", report["correct_scam_detections"]),
+		("Missed scams", report["missed_scams"]),
+	)
+	for column, (label, value) in zip(summary_columns, summary_values):
+		with column:
+			st.metric(label, value)
+	st.caption(f"False alarms: {report['false_alarms']}")
+
+	st.markdown("### Overall metrics")
+	metric_names = (
+		("Accuracy", "accuracy"),
+		("Precision", "precision"),
+		("Recall", "recall"),
+		("F1-score", "f1_score"),
+		("False-positive rate", "false_positive_rate"),
+		("True-positive rate", "true_positive_rate"),
+	)
+	metric_values = report["overall_metrics"]
+	for row_start in (0, 3):
+		columns = st.columns(3)
+		for column, (label, key) in zip(columns, metric_names[row_start:row_start + 3]):
+			with column:
+				st.metric(label, f"{metric_values[key]:.1%}")
+
+	st.markdown("### Confusion matrix")
+	confusion = report["confusion_matrix"]
+	st.table(
+		[
+			{
+				"Actual label": "Scam",
+				"Predicted scam": confusion["true_positive"],
+				"Predicted genuine": confusion["false_negative"],
+			},
+			{
+				"Actual label": "Genuine",
+				"Predicted scam": confusion["false_positive"],
+				"Predicted genuine": confusion["true_negative"],
+			},
+		]
+	)
+
+	def metric_rows(performance: dict, label_name: str) -> list[dict]:
+		rows = []
+		for label, details in performance.items():
+			metrics = details["metrics"]
+			rows.append(
+				{
+					label_name: label.replace("_", " ").title(),
+					"Samples": details.get("total_samples", details.get("support", 0)),
+					"Native review needed": details.get(
+						"native_speaker_review_required_samples", "—"
+					),
+					"Accuracy": f"{metrics['accuracy']:.1%}",
+					"Precision": f"{metrics['precision']:.1%}",
+					"Recall": f"{metrics['recall']:.1%}",
+					"F1": f"{metrics['f1_score']:.1%}",
+					"FPR": f"{metrics['false_positive_rate']:.1%}",
+					"TPR": f"{metrics['true_positive_rate']:.1%}",
+				}
+			)
+		return rows
+
+	st.markdown("### Language-wise performance")
+	st.table(metric_rows(report["language_performance"], "Language"))
+
+	st.markdown("### Stage-wise performance")
+	st.table(metric_rows(report["stage_wise_performance"], "Stage"))
+
+	st.markdown("### Tactic-wise performance")
+	st.table(metric_rows(report["tactic_wise_performance"], "Tactic"))
+	st.caption(
+		f"{report['native_speaker_review_required_samples']} of {report['total_samples']} "
+		"samples are marked for native-speaker review. Evaluation labels are manually assigned and were not generated by the detector."
+	)
+
+
 st.set_page_config(
 	page_title="VaaniShield",
 	page_icon="V",
@@ -456,5 +646,7 @@ elif page == "Threat Intelligence":
 	render_threat_intelligence()
 elif page == "Reports":
 	render_reports()
-else:
+elif page == "How It Works":
 	render_how_it_works()
+else:
+	render_evaluation()

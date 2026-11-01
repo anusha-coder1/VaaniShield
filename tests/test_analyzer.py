@@ -1,3 +1,7 @@
+from pathlib import Path
+
+from streamlit.testing.v1 import AppTest
+
 from models.schemas import AnalysisResult, RiskLevel
 from services.analyzer import analyze
 
@@ -64,3 +68,58 @@ def test_result_follows_analysis_result_schema():
 	assert isinstance(result.confidence, float)
 	assert 0.0 <= result.confidence <= 1.0
 	assert isinstance(result.uncertainty_note, str)
+	assert isinstance(result.indicator_evidence, list)
+
+
+def test_redacted_sensitive_value_is_not_exposed_in_evidence():
+	result = analyze(
+		"Your Aadhaar number 1234 5678 9012 has been linked to a criminal investigation."
+	)
+
+	assert "accusation" in result.stages_detected
+	all_evidence = " ".join(
+		phrase
+		for evidence in result.indicator_evidence
+		for phrase in evidence.exact_phrases
+	)
+	assert "[REDACTED_AADHAAR]" in all_evidence
+	assert "1234 5678 9012" not in all_evidence
+
+
+def _submit_text_analysis(transcript):
+	app_path = Path(__file__).resolve().parents[1] / "app.py"
+	app = AppTest.from_file(app_path, default_timeout=15).run()
+	next(button for button in app.button if button.label == "Analyze").click().run()
+	text_area = next(
+		widget for widget in app.text_area if widget.label == "Suspicious call transcript"
+	)
+	text_area.set_value(transcript)
+	next(button for button in app.button if button.label == "Analyze Conversation").click().run()
+	return app
+
+
+def test_ui_labels_undetected_indicators_narrowly():
+	app = _submit_text_analysis("I use UPI for ordinary bank transactions.")
+
+	assert not app.exception
+	assert sum(
+		"Not detected in the supplied conversation." in caption.value
+		for caption in app.caption
+	) == 9
+
+
+def test_ui_shows_high_risk_safety_recommendations_without_submitting_reports():
+	app = _submit_text_analysis(
+		"This is the police. You are under investigation for fraud. "
+		"Pay the fine immediately or you will be arrested."
+	)
+
+	assert not app.exception
+	warnings = " ".join(item.value for item in app.warning)
+	assert "end the suspicious call" in warnings
+	assert "Do not transfer money" in warnings
+	assert "independently sourced official contact details" in warnings
+	assert "inform someone you trust" in warnings
+	assert "1930" in warnings
+	assert "cybercrime.gov.in" in warnings
+	assert "will not contact anyone or submit a report" in warnings

@@ -1,0 +1,368 @@
+{
+  "dataset_name": "VaaniShield synthetic multilingual evaluation set",
+  "dataset_version": 1,
+  "description": "Synthetic conversations with manually assigned expected labels independent of VaaniShield detector output. This small set is for deterministic regression evaluation, not real-world validated performance.",
+  "labeling_note": "All transcripts are invented and contain no real personal, phone, account, bank, or victim information. Non-English and code-mixed samples are provisional and require native-speaker review.",
+  "samples": [
+    {
+      "sample_id": "EN-DA-001",
+      "language": "English",
+      "conversation_type": "digital-arrest scam",
+      "transcript": "This is the police investigation unit. Your Aadhaar number has been linked to a criminal investigation. Do not disconnect this call or tell your family. Transfer fifty thousand rupees immediately to avoid arrest. Keep this investigation confidential.",
+      "expected_scam": true,
+      "expected_stages": ["authority_claim", "accusation", "isolation", "payment_demand"],
+      "expected_tactics": ["urgency", "authority_impersonation", "payment_pressure", "secrecy"],
+      "native_speaker_review_required": false
+    },
+    {
+      "sample_id": "EN-FF-001",
+      "language": "English",
+      "conversation_type": "financial fraud scam",
+      "transcript": "Your bank account was involved in illegal transactions. Send money to this verification account immediately or your account will be frozen until payment. Share your OTP to complete the transfer.",
+      "expected_scam": true,
+      "expected_stages": ["accusation", "payment_demand"],
+      "expected_tactics": ["urgency", "credential_harvesting", "payment_pressure"],
+      "native_speaker_review_required": false
+    },
+    {
+      "sample_id": "EN-GB-001",
+      "language": "English",
+      "conversation_type": "genuine banking conversation",
+      "transcript": "I called my bank using the number on its official website about a routine UPI transfer. Support confirmed the transaction and reminded me never to share an OTP.",
+      "expected_scam": false,
+      "expected_stages": [],
+      "expected_tactics": [],
+      "native_speaker_review_required": false
+    },
+    {
+      "sample_id": "EN-PV-001",
+      "language": "English",
+      "conversation_type": "legitimate police verification discussion",
+      "transcript": "I visited the police station for a scheduled passport verification. The officer checked my identity and explained where to collect the document.",
+      "expected_scam": false,
+      "expected_stages": [],
+      "expected_tactics": [],
+      "native_speaker_review_required": false
+    },
+    {
+      "sample_id": "EN-OTP-001",
+      "language": "English",
+      "conversation_type": "protective OTP/security warning",
+      "transcript": "Security reminder: never share your OTP, PIN, CVV, or password with anyone who contacts you. Use the bank's official app for account support.",
+      "expected_scam": false,
+      "expected_stages": [],
+      "expected_tactics": [],
+      "native_speaker_review_required": false
+    },
+    {
+      "sample_id": "EN-EDU-001",
+      "language": "English",
+      "conversation_type": "educational discussion about scams",
+      "transcript": "In a scam-awareness lesson, we reviewed an example script where a caller says they are police, accuses someone of a crime, demands a transfer, and tells the person not to call family.",
+      "expected_scam": false,
+      "expected_stages": [],
+      "expected_tactics": [],
+      "native_speaker_review_required": false
+    },
+    {
+      "sample_id": "HI-DA-001",
+      "language": "Hindi",
+      "conversation_type": "digital-arrest scam",
+      "transcript": "साइबर अपराध विभाग से कॉल है। आपका आधार नंबर आपराधिक जांच से जुड़ा बताया गया है। कॉल न काटें और परिवार को न बताएं। गिरफ्तारी से बचने के लिए तुरंत पचास हजार रुपये भेजें और इस मामले को गोपनीय रखें।",
+      "expected_scam": true,
+      "expected_stages": ["authority_claim", "accusation", "isolation", "payment_demand"],
+      "expected_tactics": ["urgency", "authority_impersonation", "payment_pressure", "secrecy"],
+      "native_speaker_review_required": true
+    },
+    {
+      "sample_id": "HI-FF-001",
+      "language": "Hindi",
+      "conversation_type": "financial fraud scam",
+      "transcript": "आपके बैंक खाते में अवैध लेन-देन होने का आरोप है। खाता बंद होने से बचाने के लिए अभी भुगतान करें और अपना OTP बताएं।",
+      "expected_scam": true,
+      "expected_stages": ["accusation", "payment_demand"],
+      "expected_tactics": ["urgency", "credential_harvesting", "payment_pressure"],
+      "native_speaker_review_required": true
+    },
+    {
+      "sample_id": "HI-GB-001",
+      "language": "Hindi",
+      "conversation_type": "genuine banking conversation",
+      "transcript": "मैंने अपने बैंक के आधिकारिक ऐप से सामान्य UPI भुगतान किया। ग्राहक सहायता ने लेन-देन की स्थिति बताई और OTP साझा न करने की सलाह दी।",
+      "expected_scam": false,
+      "expected_stages": [],
+      "expected_tactics": [],
+      "native_speaker_review_required": true
+    },
+    {
+      "sample_id": "HI-PV-001",
+      "language": "Hindi",
+      "conversation_type": "legitimate police verification discussion",
+      "transcript": "मैं पासपोर्ट सत्यापन के लिए निर्धारित समय पर पुलिस स्टेशन गया। अधिकारी ने पहचान की जांच की और प्रक्रिया समझाई।",
+      "expected_scam": false,
+      "expected_stages": [],
+      "expected_tactics": [],
+      "native_speaker_review_required": true
+    },
+    {
+      "sample_id": "HI-OTP-001",
+      "language": "Hindi",
+      "conversation_type": "protective OTP/security warning",
+      "transcript": "बैंक की सुरक्षा सूचना: अपना OTP, PIN या पासवर्ड किसी कॉल करने वाले व्यक्ति को कभी न बताएं।",
+      "expected_scam": false,
+      "expected_stages": [],
+      "expected_tactics": [],
+      "native_speaker_review_required": true
+    },
+    {
+      "sample_id": "HI-EDU-001",
+      "language": "Hindi",
+      "conversation_type": "educational discussion about scams",
+      "transcript": "जागरूकता कक्षा में हमने एक काल्पनिक डिजिटल-अरेस्ट धोखाधड़ी के उदाहरण पर चर्चा की, जिसमें कोई व्यक्ति पुलिस होने का दावा करता है और पैसे मांगता है।",
+      "expected_scam": false,
+      "expected_stages": [],
+      "expected_tactics": [],
+      "native_speaker_review_required": true
+    },
+    {
+      "sample_id": "TE-DA-001",
+      "language": "Telugu",
+      "conversation_type": "digital-arrest scam",
+      "transcript": "సైబర్ క్రైమ్ విభాగం నుండి మాట్లాడుతున్నాం. మీ ఆధార్ నంబర్ క్రిమినల్ దర్యాప్తుతో సంబంధం ఉందని చెబుతున్నారు. కాల్ కట్ చేయకండి, కుటుంబానికి చెప్పకండి. అరెస్టు తప్పించుకోవడానికి వెంటనే డబ్బు బదిలీ చేయండి.",
+      "expected_scam": true,
+      "expected_stages": ["authority_claim", "accusation", "isolation", "payment_demand"],
+      "expected_tactics": ["urgency", "authority_impersonation", "payment_pressure", "secrecy"],
+      "native_speaker_review_required": true
+    },
+    {
+      "sample_id": "TE-FF-001",
+      "language": "Telugu",
+      "conversation_type": "financial fraud scam",
+      "transcript": "మీ బ్యాంకు ఖాతాలో అనుమానాస్పద లావాదేవీలు ఉన్నాయని చెబుతున్నారు. ఖాతా నిలిపివేయకుండా ఉండాలంటే ఇప్పుడే చెల్లించి మీ OTP చెప్పండి.",
+      "expected_scam": true,
+      "expected_stages": ["accusation", "payment_demand"],
+      "expected_tactics": ["urgency", "credential_harvesting", "payment_pressure"],
+      "native_speaker_review_required": true
+    },
+    {
+      "sample_id": "TE-GB-001",
+      "language": "Telugu",
+      "conversation_type": "genuine banking conversation",
+      "transcript": "నా బ్యాంకు అధికారిక యాప్‌లో సాధారణ UPI బదిలీ స్థితిని చూశాను. సహాయకుడు లావాదేవీ పూర్తయిందని తెలిపి OTP ఎవరితోనూ పంచుకోవద్దని గుర్తుచేశాడు.",
+      "expected_scam": false,
+      "expected_stages": [],
+      "expected_tactics": [],
+      "native_speaker_review_required": true
+    },
+    {
+      "sample_id": "TE-PV-001",
+      "language": "Telugu",
+      "conversation_type": "legitimate police verification discussion",
+      "transcript": "పాస్‌పోర్ట్ ధృవీకరణ కోసం నిర్ణయించిన సమయంలో పోలీస్ స్టేషన్‌కు వెళ్లాను. అధికారి గుర్తింపును పరిశీలించి తదుపరి విధానాన్ని వివరించారు.",
+      "expected_scam": false,
+      "expected_stages": [],
+      "expected_tactics": [],
+      "native_speaker_review_required": true
+    },
+    {
+      "sample_id": "TE-OTP-001",
+      "language": "Telugu",
+      "conversation_type": "protective OTP/security warning",
+      "transcript": "భద్రతా సూచన: మీ OTP, PIN లేదా పాస్‌వర్డ్‌ను ఫోన్‌లో అడిగే ఎవరికీ చెప్పవద్దు.",
+      "expected_scam": false,
+      "expected_stages": [],
+      "expected_tactics": [],
+      "native_speaker_review_required": true
+    },
+    {
+      "sample_id": "TE-EDU-001",
+      "language": "Telugu",
+      "conversation_type": "educational discussion about scams",
+      "transcript": "సైబర్ భద్రత తరగతిలో డిజిటల్ అరెస్ట్ మోసాల గురించి చర్చించాము. ఉదాహరణలో కాలర్ పోలీస్ అని చెప్పి డబ్బు అడుగుతాడు.",
+      "expected_scam": false,
+      "expected_stages": [],
+      "expected_tactics": [],
+      "native_speaker_review_required": true
+    },
+    {
+      "sample_id": "TA-DA-001",
+      "language": "Tamil",
+      "conversation_type": "digital-arrest scam",
+      "transcript": "சைபர் குற்றப் பிரிவிலிருந்து பேசுகிறோம். உங்கள் ஆதார் எண் குற்ற விசாரணையுடன் இணைக்கப்பட்டதாக கூறுகிறார்கள். அழைப்பை துண்டிக்காதீர்கள், குடும்பத்திடம் சொல்லாதீர்கள். கைது தவிர்க்க உடனே பணத்தை மாற்றுங்கள்.",
+      "expected_scam": true,
+      "expected_stages": ["authority_claim", "accusation", "isolation", "payment_demand"],
+      "expected_tactics": ["urgency", "authority_impersonation", "payment_pressure", "secrecy"],
+      "native_speaker_review_required": true
+    },
+    {
+      "sample_id": "TA-FF-001",
+      "language": "Tamil",
+      "conversation_type": "financial fraud scam",
+      "transcript": "உங்கள் வங்கிக் கணக்கில் சட்டவிரோத பரிவர்த்தனைகள் நடந்ததாக கூறுகிறார்கள். கணக்கு முடக்கப்படாமல் இருக்க உடனே பணம் செலுத்தி OTP-ஐ பகிருங்கள்.",
+      "expected_scam": true,
+      "expected_stages": ["accusation", "payment_demand"],
+      "expected_tactics": ["urgency", "credential_harvesting", "payment_pressure"],
+      "native_speaker_review_required": true
+    },
+    {
+      "sample_id": "TA-GB-001",
+      "language": "Tamil",
+      "conversation_type": "genuine banking conversation",
+      "transcript": "வங்கியின் அதிகாரப்பூர்வ செயலியில் வழக்கமான UPI பரிவர்த்தனையை பார்த்தேன். ஆதரவு ஊழியர் பரிவர்த்தனை முடிந்ததாகவும் OTP-ஐ பகிர வேண்டாமென்றும் கூறினார்.",
+      "expected_scam": false,
+      "expected_stages": [],
+      "expected_tactics": [],
+      "native_speaker_review_required": true
+    },
+    {
+      "sample_id": "TA-PV-001",
+      "language": "Tamil",
+      "conversation_type": "legitimate police verification discussion",
+      "transcript": "கடவுச்சீட்டு சரிபார்ப்பிற்காக நிர்ணயிக்கப்பட்ட நேரத்தில் காவல் நிலையம் சென்றேன். அதிகாரி அடையாளத்தை சரிபார்த்து நடைமுறையை விளக்கினார்.",
+      "expected_scam": false,
+      "expected_stages": [],
+      "expected_tactics": [],
+      "native_speaker_review_required": true
+    },
+    {
+      "sample_id": "TA-OTP-001",
+      "language": "Tamil",
+      "conversation_type": "protective OTP/security warning",
+      "transcript": "பாதுகாப்பு நினைவூட்டல்: உங்கள் OTP, PIN அல்லது கடவுச்சொல்லை தொலைபேசியில் கேட்பவர்களிடம் பகிர வேண்டாம்.",
+      "expected_scam": false,
+      "expected_stages": [],
+      "expected_tactics": [],
+      "native_speaker_review_required": true
+    },
+    {
+      "sample_id": "TA-EDU-001",
+      "language": "Tamil",
+      "conversation_type": "educational discussion about scams",
+      "transcript": "சைபர் பாதுகாப்பு வகுப்பில் டிஜிட்டல் கைது மோசடிகள் பற்றி பேசினோம். எடுத்துக்காட்டில் ஒருவர் காவல்துறை என்று கூறி பணம் கேட்கிறார்.",
+      "expected_scam": false,
+      "expected_stages": [],
+      "expected_tactics": [],
+      "native_speaker_review_required": true
+    },
+    {
+      "sample_id": "ML-DA-001",
+      "language": "Malayalam",
+      "conversation_type": "digital-arrest scam",
+      "transcript": "സൈബർ ക്രൈം വിഭാഗത്തിൽ നിന്നാണ് വിളിക്കുന്നത്. നിങ്ങളുടെ ആധാർ നമ്പർ ക്രിമിനൽ അന്വേഷണവുമായി ബന്ധിപ്പിച്ചെന്ന് പറയുന്നു. കോൾ വിച്ഛേദിക്കരുത്, കുടുംബത്തോട് പറയരുത്. അറസ്റ്റ് ഒഴിവാക്കാൻ ഉടൻ പണം കൈമാറുക.",
+      "expected_scam": true,
+      "expected_stages": ["authority_claim", "accusation", "isolation", "payment_demand"],
+      "expected_tactics": ["urgency", "authority_impersonation", "payment_pressure", "secrecy"],
+      "native_speaker_review_required": true
+    },
+    {
+      "sample_id": "ML-FF-001",
+      "language": "Malayalam",
+      "conversation_type": "financial fraud scam",
+      "transcript": "നിങ്ങളുടെ ബാങ്ക് അക്കൗണ്ടിൽ നിയമവിരുദ്ധ ഇടപാടുകൾ ഉണ്ടായെന്ന് പറയുന്നു. അക്കൗണ്ട് മരവിപ്പിക്കാതിരിക്കാൻ ഉടൻ പണം അടച്ച് OTP പറയുക.",
+      "expected_scam": true,
+      "expected_stages": ["accusation", "payment_demand"],
+      "expected_tactics": ["urgency", "credential_harvesting", "payment_pressure"],
+      "native_speaker_review_required": true
+    },
+    {
+      "sample_id": "ML-GB-001",
+      "language": "Malayalam",
+      "conversation_type": "genuine banking conversation",
+      "transcript": "ബാങ്കിന്റെ ഔദ്യോഗിക ആപ്പിൽ സാധാരണ UPI ഇടപാട് പരിശോധിച്ചു. ഇടപാട് പൂർത്തിയായെന്നും OTP ആരോടും പങ്കിടരുതെന്നും സഹായ കേന്ദ്രം അറിയിച്ചു.",
+      "expected_scam": false,
+      "expected_stages": [],
+      "expected_tactics": [],
+      "native_speaker_review_required": true
+    },
+    {
+      "sample_id": "ML-PV-001",
+      "language": "Malayalam",
+      "conversation_type": "legitimate police verification discussion",
+      "transcript": "പാസ്‌പോർട്ട് പരിശോധനയ്ക്കായി നിശ്ചയിച്ച സമയത്ത് പൊലീസ് സ്റ്റേഷനിൽ പോയി. ഉദ്യോഗസ്ഥൻ തിരിച്ചറിയൽ പരിശോധിച്ച് നടപടിക്രമം വിശദീകരിച്ചു.",
+      "expected_scam": false,
+      "expected_stages": [],
+      "expected_tactics": [],
+      "native_speaker_review_required": true
+    },
+    {
+      "sample_id": "ML-OTP-001",
+      "language": "Malayalam",
+      "conversation_type": "protective OTP/security warning",
+      "transcript": "സുരക്ഷാ മുന്നറിയിപ്പ്: നിങ്ങളുടെ OTP, PIN, പാസ്‌വേഡ് എന്നിവ ഫോണിൽ ആവശ്യപ്പെടുന്നവരുമായി പങ്കിടരുത്.",
+      "expected_scam": false,
+      "expected_stages": [],
+      "expected_tactics": [],
+      "native_speaker_review_required": true
+    },
+    {
+      "sample_id": "ML-EDU-001",
+      "language": "Malayalam",
+      "conversation_type": "educational discussion about scams",
+      "transcript": "സൈബർ സുരക്ഷാ ക്ലാസിൽ ഡിജിറ്റൽ അറസ്റ്റ് തട്ടിപ്പിനെക്കുറിച്ച് സംസാരിച്ചു. ഉദാഹരണത്തിൽ വിളിക്കുന്നയാൾ പൊലീസ് ഉദ്യോഗസ്ഥനാണെന്ന് നടിച്ച് പണം ആവശ്യപ്പെടുന്നു.",
+      "expected_scam": false,
+      "expected_stages": [],
+      "expected_tactics": [],
+      "native_speaker_review_required": true
+    },
+    {
+      "sample_id": "MIX-DA-001",
+      "language": "Indian code-mixed speech",
+      "conversation_type": "digital-arrest scam",
+      "transcript": "Cybercrime department se call kar raha hoon. Aapka Aadhaar number investigation se linked hai. Call disconnect mat kijiye aur family ko mat batayiye. Arrest avoid karne ke liye fifty thousand rupees abhi transfer kijiye.",
+      "expected_scam": true,
+      "expected_stages": ["authority_claim", "accusation", "isolation", "payment_demand"],
+      "expected_tactics": ["urgency", "authority_impersonation", "payment_pressure", "secrecy"],
+      "native_speaker_review_required": true
+    },
+    {
+      "sample_id": "MIX-FF-001",
+      "language": "Indian code-mixed speech",
+      "conversation_type": "financial fraud scam",
+      "transcript": "Aapke bank account mein suspicious transaction hua hai. Account freeze hone se bachane ke liye abhi payment karo aur apna OTP batao.",
+      "expected_scam": true,
+      "expected_stages": ["accusation", "payment_demand"],
+      "expected_tactics": ["urgency", "credential_harvesting", "payment_pressure"],
+      "native_speaker_review_required": true
+    },
+    {
+      "sample_id": "MIX-GB-001",
+      "language": "Indian code-mixed speech",
+      "conversation_type": "genuine banking conversation",
+      "transcript": "Maine bank ke official app mein apna UPI transfer check kiya. Support ne bola transaction complete hai aur OTP kisi ke saath share nahi karna.",
+      "expected_scam": false,
+      "expected_stages": [],
+      "expected_tactics": [],
+      "native_speaker_review_required": true
+    },
+    {
+      "sample_id": "MIX-PV-001",
+      "language": "Indian code-mixed speech",
+      "conversation_type": "legitimate police verification discussion",
+      "transcript": "Passport verification ke liye police station par appointment tha. Officer ne identity check ki aur normal process explain kiya.",
+      "expected_scam": false,
+      "expected_stages": [],
+      "expected_tactics": [],
+      "native_speaker_review_required": true
+    },
+    {
+      "sample_id": "MIX-OTP-001",
+      "language": "Indian code-mixed speech",
+      "conversation_type": "protective OTP/security warning",
+      "transcript": "Bank ka security message hai: apna OTP, PIN ya password kisi caller ko kabhi share mat karo. Official app use karo.",
+      "expected_scam": false,
+      "expected_stages": [],
+      "expected_tactics": [],
+      "native_speaker_review_required": true
+    },
+    {
+      "sample_id": "MIX-EDU-001",
+      "language": "Indian code-mixed speech",
+      "conversation_type": "educational discussion about scams",
+      "transcript": "Scam awareness class mein ek example script discuss ki: caller bolta hai 'This is the police', investigation ka dar dikhata hai aur payment maangta hai.",
+      "expected_scam": false,
+      "expected_stages": [],
+      "expected_tactics": [],
+      "native_speaker_review_required": true
+    }
+  ]
+}
