@@ -468,3 +468,24 @@ def test_exact_matched_phrases_are_included():
 
 	assert "This is the police" in result.exact_phrases
 	assert "You are under investigation for fraud" in result.exact_phrases
+def test_secrecy_is_detected_in_coordinated_instructions():
+    result = analyze_transcript(
+        "Do not disconnect this call or tell anyone about this investigation."
+    )
+
+    assert "isolation" in result.stages_detected
+    assert "secrecy" in result.tactics_detected
+@pytest.mark.parametrize(
+    "transcript",
+    [
+        "This is an officer from the National Investigation Bureau.",
+        "I am a senior officer with the central investigation agency.",
+        "I am from your bank's security team.",
+        "I work with the payment support department.",
+        "I am calling from the bank's account recovery team.",
+    ],
+)
+def test_authority_claim_language_expanded(transcript):
+    result = analyze_transcript(transcript)
+
+    assert "authority_claim" in result.stages_detected

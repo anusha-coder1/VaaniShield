@@ -9,32 +9,49 @@ from services.multilingual_patterns import (
 
 
 _AUTHORITY_PATTERNS = (
-	re.compile(r"సైబర్ క్రైమ్ విభాగం నుండి మాట్లాడుతున్నాం"),
-	re.compile(
-		r"\b(?:i am calling from|i'm calling from|we are calling from|"
-		r"we're calling from|this is|i am|i'm|we are|we're|calling from)\s+"
-		r"(?:an?\s+)?(?:the\s+)?(?:police(?:\s+(?:investigation|crime|cybercrime)\s+"
-		r"(?:unit|department|office))?|cyber[- ]?crime(?:\s+investigation)?\s+"
-		r"(?:unit|department|office)|law enforcement|federal (?:agent|officer)|"
-		r"central bureau of investigation|CBI(?:\s+(?:unit|department|office))?|"
-		r"UIDAI|income tax department|reserve bank of india)\b",
-		re.IGNORECASE,
-	),
-	re.compile(
-		r"\b(?:officer|agent)\s+(?:from|with)\s+(?:the\s+)?"
-		r"(?:police|law enforcement|cyber[- ]?crime (?:unit|department)|CBI)\b",
-		re.IGNORECASE,
-	),
-	re.compile(
-		r"\byou are speaking to\s+(?:the\s+)?"
-		r"(?:police|law enforcement|cyber[- ]?crime (?:unit|department)|CBI)\b",
-		re.IGNORECASE,
-	),
-	re.compile(
-		r"\byour case has been transferred to (?:our|the) "
-		r"(?:police|cyber[- ]?crime|criminal investigation)?\s*(?:unit|department|office)\b",
-		re.IGNORECASE,
-	),
+    re.compile(r"సైబర్ క్రైమ్ విభాగం నుండి మాట్లాడుతున్నాం"),
+    re.compile(
+        r"\b(?:i am calling from|i'm calling from|we are calling from|"
+        r"we're calling from|this is|i am|i'm|we are|we're|calling from)\s+"
+        r"(?:an?\s+)?(?:the\s+)?"
+        r"(?:police(?:\s+(?:investigation|crime|cybercrime)\s+"
+        r"(?:unit|department|office))?|"
+        r"cyber[- ]?crime(?:\s+investigation)?\s+(?:unit|department|office)|"
+        r"law enforcement|federal (?:agent|officer)|"
+        r"central bureau of investigation|CBI(?:\s+(?:unit|department|office))?|"
+        r"UIDAI|income tax department|reserve bank of india|"
+        r"national investigation bureau|central investigation agency|"
+        r"state police cyber unit|"
+        r"(?:your\s+)?bank(?:'s)?\s+(?:security|verification|account recovery)\s+team|"
+        r"(?:payment|account recovery)\s+support department)\b",
+        re.IGNORECASE,
+    ),
+    re.compile(
+        r"\b(?:officer|agent)\s+(?:from|with)\s+(?:the\s+)?"
+        r"(?:police|law enforcement|cyber[- ]?crime\s+(?:unit|department)|"
+        r"CBI|national investigation bureau|central investigation agency)\b",
+        re.IGNORECASE,
+    ),
+    re.compile(
+        r"\byou are speaking to\s+(?:the\s+)?"
+        r"(?:police|law enforcement|cyber[- ]?crime\s+(?:unit|department)|CBI)\b",
+        re.IGNORECASE,
+    ),
+    re.compile(
+        r"\byour case has been transferred to (?:our|the)\s+"
+        r"(?:police|cyber[- ]?crime|criminal investigation)?\s*"
+        r"(?:unit|department|office)\b",
+        re.IGNORECASE,
+    ),
+
+    re.compile(
+        r"\b(?:i am|i'm|we are|we're|i work|we work)\s+"
+        r"(?:from|with)\s+"
+        r"(?:(?:your|the)\s+)?(?:bank(?:'s)?\s+)?"
+        r"(?:security team|verification team|account recovery team|"
+        r"payment support department)\b",
+        re.IGNORECASE,
+    ),
 )
 
 _CREDENTIAL_NEGATION_PATTERN = re.compile(
@@ -283,6 +300,12 @@ _TACTIC_PATTERNS = {
 		),
 	),
 	"secrecy": (
+		re.compile(
+            r"\b(?:or|and)\s+(?:(?:do not|don't|must not|mustn't)\s+)?"
+            r"(?:tell|inform)\s+(?:anyone|anybody|your family|your friends)"
+            r"(?:\s+about\s+(?:this|the)\s+(?:investigation|case))?\b",
+            re.IGNORECASE,
+        ),
 		re.compile(r"కుటుంబానికి చెప్పకండి"),
 		re.compile(
 			r"\b(?:keep this confidential|keep this secret|do not discuss this|"
