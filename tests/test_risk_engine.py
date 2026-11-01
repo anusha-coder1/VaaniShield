@@ -4,7 +4,7 @@ from models.schemas import RiskLevel
 from services.risk_engine import analyze_transcript
 
 
-def test_authority_impersonation_with_accusation_is_detected():
+def test_authority_claim_with_accusation_alone_does_not_prove_coercion():
 	result = analyze_transcript(
 		"This is the police. You are under investigation for fraud."
 	)
@@ -12,7 +12,7 @@ def test_authority_impersonation_with_accusation_is_detected():
 	assert result.scam_detected is True
 	assert "authority_claim" in result.stages_detected
 	assert "accusation" in result.stages_detected
-	assert "authority_impersonation" in result.tactics_detected
+	assert "authority_based_coercion" not in result.tactics_detected
 
 
 def test_authority_claim_alone_does_not_prove_impersonation():
@@ -92,7 +92,7 @@ def test_telugu_digital_arrest_patterns_have_separate_evidence():
 	assert {"authority_claim", "accusation", "isolation", "payment_demand"}.issubset(
 		set(result.stages_detected)
 	)
-	assert {"urgency", "authority_impersonation", "payment_pressure", "secrecy"}.issubset(
+	assert {"urgency", "authority_based_coercion", "payment_pressure", "secrecy"}.issubset(
 		set(result.tactics_detected)
 	)
 	evidence = {item.indicator: item for item in result.indicator_evidence}
@@ -177,6 +177,15 @@ def test_isolation_language_variations(transcript):
 	assert result.exact_phrases
 
 
+
+
+def test_account_freeze_until_payment_is_payment_pressure_not_demand():
+	result = analyze_transcript("Your account will remain frozen until payment.")
+
+	assert "payment_demand" not in result.stages_detected
+	assert "payment_pressure" in result.tactics_detected
+	assert result.exact_phrases
+
 @pytest.mark.parametrize(
 	"transcript",
 	[
@@ -184,9 +193,9 @@ def test_isolation_language_variations(transcript):
 		"Send money to this verification account.",
 		"Pay the security deposit immediately.",
 		"Transfer the amount to avoid arrest.",
-		"Your account will remain frozen until payment.",
 	],
 )
+
 def test_payment_demand_language_variations(transcript):
 	result = analyze_transcript(transcript)
 
@@ -199,8 +208,8 @@ def test_payment_demand_language_variations(transcript):
 	[
 		("You have ten minutes to respond.", "urgency"),
 		(
-			"I am calling from the police investigation unit. You are under investigation.",
-			"authority_impersonation",
+			"I am calling from the police investigation unit. You are under investigation. Do not tell anyone.",
+			"authority_based_coercion",
 		),
 		("Please provide your OTP.", "credential_harvesting"),
 		("Transfer fifty thousand rupees to avoid arrest.", "payment_pressure"),
@@ -313,8 +322,9 @@ def test_payment_demand_with_authority_claim_is_detected():
 
 	assert "authority_claim" in result.stages_detected
 	assert "payment_demand" in result.stages_detected
+	assert "authority_based_coercion" not in result.tactics_detected
 	assert result.scam_detected is True
-	assert result.risk_level == RiskLevel.HIGH
+	assert result.risk_level == RiskLevel.MEDIUM
 
 
 def test_urgency_phrase_is_detected():

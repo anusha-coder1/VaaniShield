@@ -2,6 +2,11 @@ import re
 
 from models.schemas import AnalysisResult, IndicatorEvidence, RiskLevel
 
+from services.multilingual_patterns import (
+    STAGE_PATTERNS as _MULTILINGUAL_STAGE_PATTERNS,
+    TACTIC_PATTERNS as _MULTILINGUAL_TACTIC_PATTERNS,
+)
+
 
 _AUTHORITY_PATTERNS = (
 	re.compile(r"సైబర్ క్రైమ్ విభాగం నుండి మాట్లాడుతున్నాం"),
@@ -174,11 +179,6 @@ _STAGE_PATTERNS = {
 			re.IGNORECASE,
 		),
 		re.compile(
-			r"\byour (?:bank )?account (?:will|shall) remain frozen "
-			r"until (?:payment|you pay|the payment)\b",
-			re.IGNORECASE,
-		),
-		re.compile(
 			r"\b(?:transfer|send|pay)\s+(?:the\s+)?(?:amount|money|funds)\s+"
 			r"to avoid arrest\b",
 			re.IGNORECASE,
@@ -208,7 +208,7 @@ _TACTIC_PATTERNS = {
 		),
 		re.compile(r"\bimmediately\b", re.IGNORECASE),
 	),
-	"authority_impersonation": (),
+	"authority_based_coercion": (),
 	"credential_harvesting": (
 		re.compile(r"మీ\s+OTP\s+చెప్ప(?:ండి|వద్దు)"),
 		re.compile(
@@ -305,6 +305,14 @@ _TACTIC_PATTERNS = {
 	),
 }
 
+# Extend existing indicator patterns with provisional multilingual patterns.
+for _indicator, _patterns in _MULTILINGUAL_STAGE_PATTERNS.items():
+    _STAGE_PATTERNS[_indicator] += _patterns
+
+for _indicator, _patterns in _MULTILINGUAL_TACTIC_PATTERNS.items():
+    _TACTIC_PATTERNS[_indicator] += _patterns
+
+
 _INDICATOR_EXPLANATIONS = {
 	"authority_claim": (
 		"This phrase presents the caller as an official or institutional representative.",
@@ -326,7 +334,7 @@ _INDICATOR_EXPLANATIONS = {
 		"This phrase creates time pressure or asks for immediate action.",
 		"Time pressure can make independent verification more difficult.",
 	),
-	"authority_impersonation": (
+	"authority_based_coercion": (
 		"This phrase uses language associated with an official authority or agency.",
 		"A caller's claimed role should be verified through an official number you find yourself.",
 	),
@@ -401,30 +409,26 @@ def analyze_transcript(transcript: str) -> AnalysisResult:
 			detected_tactics.append(tactic)
 			indicator_matches[tactic] = matches
 
-	# An institutional claim becomes impersonation evidence only when separate
-	# coercive or deceptive evidence is also present. This preserves the
-	# distinction between claiming an institution and impersonating one.
-	impersonation_context_indicators = (
-		"accusation",
-		"isolation",
-		"payment_demand",
-		"credential_harvesting",
-		"payment_pressure",
-		"secrecy",
+	# A claimed authority requires separate coercive behaviour.
+	authority_coercion_context_indicators = (
+	    "isolation",
+	    "secrecy",
+	    "credential_harvesting",
+	    "payment_pressure",
 	)
 	if "authority_claim" in detected_stages and any(
-		indicator in detected_stages + detected_tactics
-		for indicator in impersonation_context_indicators
+	    indicator in detected_stages + detected_tactics
+	    for indicator in authority_coercion_context_indicators
 	):
-		detected_tactics.append("authority_impersonation")
-		context_matches = [
-			match
-			for indicator in impersonation_context_indicators
-			for match in indicator_matches.get(indicator, [])
-		]
-		indicator_matches["authority_impersonation"] = (
-			indicator_matches["authority_claim"] + context_matches
-		)
+	    detected_tactics.append("authority_based_coercion")
+	    context_matches = [
+	        match
+	        for indicator in authority_coercion_context_indicators
+	        for match in indicator_matches.get(indicator, [])
+	    ]
+	    indicator_matches["authority_based_coercion"] = (
+	        indicator_matches["authority_claim"] + context_matches
+	    )
 
 	# Remove only fully contained phrase matches; independent evidence stays separate.
 	all_matches = [
@@ -465,7 +469,7 @@ def analyze_transcript(transcript: str) -> AnalysisResult:
 			"accusation",
 			"isolation",
 			"urgency",
-			"authority_impersonation",
+			"authority_based_coercion",
 			"payment_pressure",
 			"secrecy",
 		)
@@ -489,7 +493,7 @@ def analyze_transcript(transcript: str) -> AnalysisResult:
 		"isolation": 1,
 		"payment_demand": 3,
 		"urgency": 1,
-		"authority_impersonation": 2,
+		"authority_based_coercion": 2,
 		"credential_harvesting": 5,
 		"payment_pressure": 3,
 		"secrecy": 1,

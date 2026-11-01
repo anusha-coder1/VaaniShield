@@ -11,7 +11,7 @@
       "transcript": "This is the police investigation unit. Your Aadhaar number has been linked to a criminal investigation. Do not disconnect this call or tell your family. Transfer fifty thousand rupees immediately to avoid arrest. Keep this investigation confidential.",
       "expected_scam": true,
       "expected_stages": ["authority_claim", "accusation", "isolation", "payment_demand"],
-      "expected_tactics": ["urgency", "authority_impersonation", "payment_pressure", "secrecy"],
+      "expected_tactics": ["urgency", "authority_based_coercion", "payment_pressure", "secrecy"],
       "native_speaker_review_required": false
     },
     {
@@ -71,7 +71,7 @@
       "transcript": "साइबर अपराध विभाग से कॉल है। आपका आधार नंबर आपराधिक जांच से जुड़ा बताया गया है। कॉल न काटें और परिवार को न बताएं। गिरफ्तारी से बचने के लिए तुरंत पचास हजार रुपये भेजें और इस मामले को गोपनीय रखें।",
       "expected_scam": true,
       "expected_stages": ["authority_claim", "accusation", "isolation", "payment_demand"],
-      "expected_tactics": ["urgency", "authority_impersonation", "payment_pressure", "secrecy"],
+      "expected_tactics": ["urgency", "authority_based_coercion", "payment_pressure", "secrecy"],
       "native_speaker_review_required": true
     },
     {
@@ -131,7 +131,7 @@
       "transcript": "సైబర్ క్రైమ్ విభాగం నుండి మాట్లాడుతున్నాం. మీ ఆధార్ నంబర్ క్రిమినల్ దర్యాప్తుతో సంబంధం ఉందని చెబుతున్నారు. కాల్ కట్ చేయకండి, కుటుంబానికి చెప్పకండి. అరెస్టు తప్పించుకోవడానికి వెంటనే డబ్బు బదిలీ చేయండి.",
       "expected_scam": true,
       "expected_stages": ["authority_claim", "accusation", "isolation", "payment_demand"],
-      "expected_tactics": ["urgency", "authority_impersonation", "payment_pressure", "secrecy"],
+      "expected_tactics": ["urgency", "authority_based_coercion", "payment_pressure", "secrecy"],
       "native_speaker_review_required": true
     },
     {
@@ -191,7 +191,7 @@
       "transcript": "சைபர் குற்றப் பிரிவிலிருந்து பேசுகிறோம். உங்கள் ஆதார் எண் குற்ற விசாரணையுடன் இணைக்கப்பட்டதாக கூறுகிறார்கள். அழைப்பை துண்டிக்காதீர்கள், குடும்பத்திடம் சொல்லாதீர்கள். கைது தவிர்க்க உடனே பணத்தை மாற்றுங்கள்.",
       "expected_scam": true,
       "expected_stages": ["authority_claim", "accusation", "isolation", "payment_demand"],
-      "expected_tactics": ["urgency", "authority_impersonation", "payment_pressure", "secrecy"],
+      "expected_tactics": ["urgency", "authority_based_coercion", "payment_pressure", "secrecy"],
       "native_speaker_review_required": true
     },
     {
@@ -251,7 +251,7 @@
       "transcript": "സൈബർ ക്രൈം വിഭാഗത്തിൽ നിന്നാണ് വിളിക്കുന്നത്. നിങ്ങളുടെ ആധാർ നമ്പർ ക്രിമിനൽ അന്വേഷണവുമായി ബന്ധിപ്പിച്ചെന്ന് പറയുന്നു. കോൾ വിച്ഛേദിക്കരുത്, കുടുംബത്തോട് പറയരുത്. അറസ്റ്റ് ഒഴിവാക്കാൻ ഉടൻ പണം കൈമാറുക.",
       "expected_scam": true,
       "expected_stages": ["authority_claim", "accusation", "isolation", "payment_demand"],
-      "expected_tactics": ["urgency", "authority_impersonation", "payment_pressure", "secrecy"],
+      "expected_tactics": ["urgency", "authority_based_coercion", "payment_pressure", "secrecy"],
       "native_speaker_review_required": true
     },
     {
@@ -311,7 +311,7 @@
       "transcript": "Cybercrime department se call kar raha hoon. Aapka Aadhaar number investigation se linked hai. Call disconnect mat kijiye aur family ko mat batayiye. Arrest avoid karne ke liye fifty thousand rupees abhi transfer kijiye.",
       "expected_scam": true,
       "expected_stages": ["authority_claim", "accusation", "isolation", "payment_demand"],
-      "expected_tactics": ["urgency", "authority_impersonation", "payment_pressure", "secrecy"],
+      "expected_tactics": ["urgency", "authority_based_coercion", "payment_pressure", "secrecy"],
       "native_speaker_review_required": true
     },
     {

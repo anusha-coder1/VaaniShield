@@ -1,4 +1,4 @@
-import json
+﻿import json
 from pathlib import Path
 
 import pytest
@@ -133,7 +133,7 @@ def test_stage_wise_and_tactic_wise_metrics(monkeypatch):
             "English",
             True,
             expected_stages=["authority_claim"],
-            expected_tactics=["authority_impersonation"],
+            expected_tactics=["authority_based_coercion"],
             transcript="stage-and-tactic",
         ),
         make_sample("I-2", "Hindi", False, transcript="no-indicators"),
@@ -144,13 +144,13 @@ def test_stage_wise_and_tactic_wise_metrics(monkeypatch):
         lambda text: make_result(
             text == "stage-and-tactic",
             stages=["authority_claim"] if text == "stage-and-tactic" else [],
-            tactics=["authority_impersonation"] if text == "stage-and-tactic" else [],
+            tactics=["authority_based_coercion"] if text == "stage-and-tactic" else [],
         ),
     )
 
     report = evaluation.evaluate_samples(samples)
     stage = report["stage_wise_performance"]["authority_claim"]
-    tactic = report["tactic_wise_performance"]["authority_impersonation"]
+    tactic = report["tactic_wise_performance"]["authority_based_coercion"]
 
     assert stage["confusion_matrix"]["true_positive"] == 1
     assert stage["metrics"]["recall"] == 1.0
@@ -163,7 +163,7 @@ def test_language_grouping_and_review_counts(monkeypatch):
     samples = [
         make_sample(
             "L-1", "English", True,
-            expected_tactics=["authority_impersonation"],
+            expected_tactics=["authority_based_coercion"],
             transcript="positive",
         ),
         make_sample("L-2", "Hindi", False, transcript="negative"),
@@ -205,3 +205,4 @@ def test_evaluation_page_is_navigable_and_disclaims_synthetic_scope():
     assert any(item.value == "Detection evaluation" for item in app.title)
     assert any("not real-world validated performance" in item.value for item in app.warning)
     assert any(item.label == "Accuracy" for item in app.metric)
+

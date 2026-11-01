@@ -1,4 +1,4 @@
-from datetime import datetime
+﻿from datetime import datetime
 from pathlib import Path
 
 import streamlit as st
@@ -40,8 +40,8 @@ STAGES = (
 TACTICS = (
 	("urgency", "Pressure to act immediately or before a stated deadline."),
 	(
-		"authority_impersonation",
-		"Language that presents the caller as law enforcement or another authority.",
+		"authority_based_coercion",
+		"A claimed authority is used alongside coercive behaviour, such as isolation, secrecy, credential requests, or payment threats.",
 	),
 	(
 		"credential_harvesting",
@@ -83,7 +83,7 @@ def record_activity(result) -> None:
 	activity = st.session_state.analysis_activity
 	activity.append(
 		{
-			"time": datetime.now().astimezone().strftime("%b %d · %H:%M"),
+			"time": datetime.now().astimezone().strftime("%b %d Â· %H:%M"),
 			"risk": result.risk_level.value,
 			"flagged": result.scam_detected,
 			"signals": len(result.stages_detected) + len(result.tactics_detected),
@@ -121,8 +121,8 @@ def render_dashboard() -> None:
 	)
 	st.markdown(
 		'<div class="vs-system-line"><span class="vs-status-dot"></span>'
-		"Keyword baseline active <span class='vs-divider-dot'>·</span> "
-		"No live threat feed <span class='vs-divider-dot'>·</span> "
+		"Keyword baseline active <span class='vs-divider-dot'>Â·</span> "
+		"No live threat feed <span class='vs-divider-dot'>Â·</span> "
 		"Session summaries only</div>",
 		unsafe_allow_html=True,
 	)
@@ -147,7 +147,7 @@ def render_dashboard() -> None:
 		stat_card(
 			"Detection categories",
 			str(len(STAGES) + len(TACTICS)),
-			f"{len(STAGES)} stages · {len(TACTICS)} tactics in the baseline",
+			f"{len(STAGES)} stages Â· {len(TACTICS)} tactics in the baseline",
 			STAT_ICONS["categories"],
 		)
 
@@ -184,7 +184,7 @@ def render_dashboard() -> None:
 
 	st.markdown("#### Privacy by design")
 	st.markdown(
-		'<div class="vs-privacy-note"><span class="vs-privacy-mark">✓</span>'
+		'<div class="vs-privacy-note"><span class="vs-privacy-mark">âœ“</span>'
 		"Sensitive formats are redacted before analysis. Session activity keeps only time, risk, and signal counts; transcripts and phrases are excluded.</div>",
 		unsafe_allow_html=True,
 	)
@@ -222,7 +222,7 @@ def render_analysis_result(result) -> None:
 			evidence = evidence_by_indicator.get(indicator)
 			label = indicator.replace("_", " ").title()
 			if evidence is None:
-				st.caption(f"{label} — Not detected in the supplied conversation.")
+				st.caption(f"{label} â€” Not detected in the supplied conversation.")
 				continue
 
 			with st.expander(label, expanded=True):
@@ -569,7 +569,7 @@ def render_evaluation() -> None:
 					label_name: label.replace("_", " ").title(),
 					"Samples": details.get("total_samples", details.get("support", 0)),
 					"Native review needed": details.get(
-						"native_speaker_review_required_samples", "—"
+						"native_speaker_review_required_samples", "â€”"
 					),
 					"Accuracy": f"{metrics['accuracy']:.1%}",
 					"Precision": f"{metrics['precision']:.1%}",
@@ -618,7 +618,7 @@ with header_brand:
 with header_status:
 	st.markdown(
 		'<div class="vs-header-status"><span class="vs-status-dot"></span>'
-		"<strong>Keyword baseline</strong><span class='vs-header-separator'>·</span>"
+		"<strong>Keyword baseline</strong><span class='vs-header-separator'>Â·</span>"
 		"<span>Session-only analysis</span></div>",
 		unsafe_allow_html=True,
 	)
