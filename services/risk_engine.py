@@ -16,6 +16,7 @@ _AUTHORITY_PATTERNS = (
         r"(?:an?\s+)?(?:the\s+)?"
         r"(?:police(?:\s+(?:investigation|crime|cybercrime)\s+"
         r"(?:unit|department|office))?|"
+        r"cyber[- ]?crime\s+police\s+(?:unit|department|office)|"
         r"cyber[- ]?crime(?:\s+investigation)?\s+(?:unit|department|office)|"
         r"law enforcement|federal (?:agent|officer)|"
         r"central bureau of investigation|CBI(?:\s+(?:unit|department|office))?|"
@@ -29,7 +30,8 @@ _AUTHORITY_PATTERNS = (
     re.compile(
         r"\b(?:officer|agent)\s+(?:from|with)\s+(?:the\s+)?"
         r"(?:police|law enforcement|cyber[- ]?crime\s+(?:unit|department)|"
-        r"CBI|national investigation bureau|central investigation agency)\b",
+        r"CBI|national investigation bureau|central investigation agency|"
+        r"national cyber investigation office)\b",
         re.IGNORECASE,
     ),
     re.compile(
@@ -50,6 +52,14 @@ _AUTHORITY_PATTERNS = (
         r"(?:(?:your|the)\s+)?(?:bank(?:'s)?\s+)?"
         r"(?:security team|verification team|account recovery team|"
         r"payment support department)\b",
+        re.IGNORECASE,
+    ),
+    re.compile(
+        r"\b(?:i represent|i work for)\s+(?:the\s+)?"
+        r"(?:cyber[- ]?crime police(?:\s+department)?|"
+        r"national cyber investigation office|"
+        r"(?:your\s+)?bank(?:'s)?\s+"
+        r"(?:verification|security|account recovery)\s+department)\b",
         re.IGNORECASE,
     ),
 )
@@ -149,8 +159,28 @@ _STAGE_PATTERNS = {
 		re.compile(
 			r"\b(?:arrest warrant|warrant)\s+(?:has been\s+)?issued against you\b",
 			re.IGNORECASE,
-		),
 	),
+
+                re.compile(
+                        r"\byour\s+(?:identity|identity documents)\s+"
+                        r"(?:has|have|was|were)\s+(?:been\s+)?"
+                        r"(?:linked to|used to open)\s+"
+                        r"(?:an?\s+)?(?:international\s+)?"
+                        r"(?:money laundering|suspicious|criminal)\s+"
+                        r"(?:case|account)\b",
+                        re.IGNORECASE,
+                ),
+                re.compile(
+                        r"\byour\s+bank account\s+is suspected of\s+"
+                        r"(?:funding|supporting)\s+(?:a\s+)?criminal network\b",
+                        re.IGNORECASE,
+                ),
+                re.compile(
+                        r"\b(?:a\s+)?(?:parcel|package)\s+registered in your name\s+"
+                        r"contains?\s+(?:illegal|prohibited|criminal) documents\b",
+                        re.IGNORECASE,
+                ),
+		),
 	"isolation": (
 		re.compile(r"కాల్ కట్ చేయకండి"),
 		re.compile(r"కుటుంబానికి చెప్పకండి"),
@@ -174,6 +204,24 @@ _STAGE_PATTERNS = {
 			r"with (?:anyone|anybody|your family|your friends)\b",
 			re.IGNORECASE,
 		),
+                re.compile(
+                        r"\b(?:must not|mustn't|do not|don't)\s+"
+                        r"(?:contact|call|speak to)\s+"
+                        r"(?:anyone|anybody|your family|your relatives|your friends)\b",
+                        re.IGNORECASE,
+                ),
+                re.compile(
+                        r"\b(?:stay|remain)\s+alone\s+"
+                        r"(?:in front of|before)\s+(?:the\s+)?camera\b",
+                        re.IGNORECASE,
+                ),
+                re.compile(
+                        r"\b(?:are not allowed to|aren't allowed to|"
+                        r"must not|mustn't|do not|don't)\s+"
+                        r"discuss\s+(?:this|the matter|the investigation|the case)\s+"
+                        r"with\s+(?:anyone|anybody|your relatives|your family|your friends)\b",
+                        re.IGNORECASE,
+                ),
 	),
 	"payment_demand": (
 		re.compile(r"డబ్బు బదిలీ చేయండి"),
@@ -200,6 +248,20 @@ _STAGE_PATTERNS = {
 			r"to avoid arrest\b",
 			re.IGNORECASE,
 		),
+                re.compile(
+                        r"\b(?:transfer|send|deposit|pay)\s+"
+                        r"(?:the\s+)?(?:verification|investigation|security clearance|"
+                        r"security)\s+(?:deposit|fee|payment|amount)\b",
+                        re.IGNORECASE,
+                ),
+                re.compile(
+                        r"\b(?:transfer|send|deposit)\s+"
+                        r"(?:your\s+)?(?:savings|funds|money)\b"
+                        r"|\b(?:send|transfer)\s+(?:a\s+)?(?:small\s+)?"
+                        r"verification transfer\b",
+                        re.IGNORECASE,
+                ),
+
 	),
 }
 
@@ -224,6 +286,15 @@ _TACTIC_PATTERNS = {
 			re.IGNORECASE,
 		),
 		re.compile(r"\bimmediately\b", re.IGNORECASE),
+		re.compile(
+            r"\b(?:arrested|detained|jailed)\s+today\b",
+            re.IGNORECASE,
+        ),
+        re.compile(
+            r"\b(?:account|card)\s+(?:will|shall)\s+be\s+"
+            r"(?:blocked|suspended|frozen)\s+unless\b",
+            re.IGNORECASE,
+        ),
 	),
 	"authority_based_coercion": (),
 	"credential_harvesting": (
@@ -240,6 +311,19 @@ _TACTIC_PATTERNS = {
 			r"(?:otp|password|pin|verification code)\b",
 			re.IGNORECASE,
 		),
+		re.compile(
+            r"\bconfirm\s+(?:the\s+)?(?:your\s+)?otp\b",
+            re.IGNORECASE,
+        ),
+        re.compile(
+            r"\bread\s+(?:out\s+)?(?:all\s+)?(?:the\s+)?"
+            r"(?:six|6)\s+digits\b",
+            re.IGNORECASE,
+        ),
+        re.compile(
+            r"\b(?:enter|type)\s+(?:your\s+)?upi\s+pin\b",
+            re.IGNORECASE,
+        ),
 	),
 	"payment_pressure": (
 		re.compile(r"అరెస్టు తప్పించుకోవడానికి\s+వెంటనే\s+డబ్బు బదిలీ చేయండి"),
@@ -298,6 +382,15 @@ _TACTIC_PATTERNS = {
 			r"until (?:payment|you pay|the payment)\b",
 			re.IGNORECASE,
 		),
+
+        re.compile(
+            r"\b(?:transfer|send|deposit|pay)\b[^.!?\n]{0,100}"
+            r"\b(?:or you will|or you'll|or we will|or we'll|to avoid|to prevent)\b"
+            r"[^.!?\n]{0,60}\b(?:be arrested|arrested|arrest|detention|detained|"
+            r"jailed|jail|legal action)\b",
+            re.IGNORECASE,
+        ),
+
 	),
 	"secrecy": (
 		re.compile(
@@ -325,6 +418,13 @@ _TACTIC_PATTERNS = {
 			r"with (?:anyone|anybody|your family|your friends)\b",
 			re.IGNORECASE,
 		),
+	    re.compile(
+            r"\b(?:you are not allowed to|you must not|you cannot|"
+            r"you can't|do not|don't)\s+"
+            r"discuss\s+(?:this|the matter|the investigation|the case)\s+"
+            r"with\s+(?:anyone|anybody|your relatives|your family|your friends)\b",
+            re.IGNORECASE,
+        ),
 	),
 }
 

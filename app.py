@@ -634,7 +634,6 @@ with st.container(key="vs-horizontal-nav"):
 			use_container_width=False,
 		):
 			st.session_state.active_page = page_name
-			st.rerun()
 
 page = st.session_state.active_page
 
