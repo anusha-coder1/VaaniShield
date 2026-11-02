@@ -25,6 +25,7 @@ Tactic = Literal[
     "credential_harvesting",
     "payment_pressure",
     "secrecy",
+    "remote_access_control",
 ]
 
 

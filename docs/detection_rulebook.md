@@ -1,4 +1,4 @@
-# VaaniShield — Detection Rulebook v1.1
+# VaaniShield — Detection Rulebook v1.2
 
 ## 1. Purpose
 
@@ -60,6 +60,7 @@ The caller uses a claimed official or trusted authority together with coercive b
    - `secrecy`
    - `credential_harvesting`
    - `payment_pressure`
+   - `remote_access_control`
 
 **Important:**
 - An authority claim alone is insufficient.
@@ -94,6 +95,20 @@ A payment request without coercive pressure is not sufficient.
 The caller explicitly instructs the recipient to keep the matter confidential or not tell others.
 
 **Evidence:** A direct instruction to keep the conversation, investigation, or matter secret.
+
+### `remote_access_control`
+
+The caller explicitly instructs or pressures the recipient to install remote-access software or give another person control of their phone, computer, or other device.
+
+**Evidence:** An explicit request to install remote-access software, enable remote control, or grant another person access or control of the device.
+
+**Important:**
+- Merely mentioning remote-access applications, such as AnyDesk or TeamViewer, does not qualify.
+- Ordinary technical-support discussions do not automatically qualify.
+- Protective warnings against installing remote-access applications must not be flagged.
+- Educational discussions about remote-access scams must not automatically be flagged.
+- A remote-access request alone does not establish that a conversation is a scam.
+- Remote access combined with suspicious context may contribute to a scam verdict.
 
 ## 4. Evidence Requirements
 

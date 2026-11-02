@@ -512,3 +512,59 @@ def test_telugu_evaluation_samples_match_expected_labels():
         assert result.scam_detected is sample["expected_scam"], sample["sample_id"]
         assert set(result.stages_detected) == set(sample["expected_stages"]), sample["sample_id"]
         assert set(result.tactics_detected) == set(sample["expected_tactics"]), sample["sample_id"]
+
+
+def test_bank_impersonation_with_remote_access_is_detected():
+    result = analyze_transcript(
+        "I am calling from your bank's account recovery team. "
+        "Install this remote access application and give me control of your phone."
+    )
+
+    assert result.scam_detected is True
+    assert "authority_claim" in result.stages_detected
+    assert "remote_access_control" in result.tactics_detected
+    assert "authority_based_coercion" in result.tactics_detected
+
+
+def test_remote_access_alone_does_not_trigger_scam_verdict():
+    result = analyze_transcript(
+        "Please install this remote access application and give me control of your phone."
+    )
+
+    assert result.scam_detected is False
+    assert "remote_access_control" in result.tactics_detected
+
+
+def test_protective_remote_access_warning_is_not_flagged():
+    result = analyze_transcript(
+        "Never install remote access apps at a caller's request."
+    )
+
+    assert result.scam_detected is False
+    assert "remote_access_control" not in result.tactics_detected
+
+
+def test_educational_remote_access_discussion_is_not_flagged():
+    result = analyze_transcript(
+        "In this cybersecurity training example, scammers ask victims "
+        "to install remote access applications."
+    )
+
+    assert result.scam_detected is False
+    assert "remote_access_control" not in result.tactics_detected
+
+
+def test_authority_coercion_evidence_includes_remote_access_request():
+    result = analyze_transcript(
+        "I am calling from your bank's account recovery team. "
+        "Install this remote access application and give me control of your phone."
+    )
+
+    evidence = next(
+        item for item in result.indicator_evidence
+        if item.indicator == "authority_based_coercion"
+    )
+
+    combined_evidence = " ".join(evidence.exact_phrases).casefold()
+    assert "calling from your bank" in combined_evidence
+    assert "remote access application" in combined_evidence

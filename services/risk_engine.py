@@ -112,6 +112,15 @@ def _is_negated_credential_request(transcript: str, match_start: int) -> bool:
 	return bool(_CREDENTIAL_NEGATION_PATTERN.search(preceding_text))
 
 
+def _is_negated_remote_access_request(transcript: str, match_start: int) -> bool:
+	"""Check whether a remote-access instruction is locally preceded by a warning."""
+	preceding_text = transcript[:match_start]
+	boundaries = list(_CREDENTIAL_SCOPE_BOUNDARY_PATTERN.finditer(preceding_text))
+	if boundaries:
+		preceding_text = preceding_text[boundaries[-1].end():]
+	return bool(_CREDENTIAL_NEGATION_PATTERN.search(preceding_text))
+
+
 def _is_educational_match(transcript: str, match_start: int) -> bool:
 	"""Ignore a match only when its current clause is explicitly educational."""
 	preceding_text = transcript[:match_start]
@@ -297,6 +306,36 @@ _TACTIC_PATTERNS = {
         ),
 	),
 	"authority_based_coercion": (),
+	"remote_access_control": (
+		re.compile(
+			r"\b(?:install|download)\s+(?:(?:this|the)\s+)?"
+			r"(?:remote[- ]access|remote[- ]control)\s+"
+			r"(?:application|app|software|program)\b",
+			re.IGNORECASE,
+		),
+		re.compile(
+			r"\b(?:give|grant|allow)\s+(?:me|us|them)\s+"
+			r"(?:remote\s+)?(?:access|control)\s+(?:to|of)\s+"
+			r"(?:your\s+)?(?:phone|device|computer)\b",
+			re.IGNORECASE,
+		),
+		re.compile(
+			r"\b(?:let|allow)\s+(?:me|us|them)\s+(?:to\s+)?"
+			r"(?:control|access)\s+(?:your\s+)?(?:phone|device|computer)\b",
+			re.IGNORECASE,
+		),
+		re.compile(
+			r"\b(?:enable|turn on|activate)\s+(?:the\s+)?remote\s+"
+			r"(?:access|control)\s+(?:on|for)\s+"
+			r"(?:your\s+)?(?:phone|device|computer)\b",
+			re.IGNORECASE,
+		),
+		re.compile(
+			r"\b(?:install|download)\s+"
+			r"(?:anydesk|teamviewer|quick\s*support)\b",
+			re.IGNORECASE,
+		),
+	),
 	"credential_harvesting": (
 		re.compile(r"మీ\s+OTP\s+చెప్ప(?:ండి|వద్దు)"),
 		re.compile(
@@ -473,6 +512,10 @@ _INDICATOR_EXPLANATIONS = {
 		"This phrase asks that the matter or investigation be kept confidential.",
 		"Secrecy may discourage outside advice or independent checks.",
 	),
+	"remote_access_control": (
+		"This phrase asks the recipient to install remote-access software or give another person control of a device.",
+		"Remote device access may expose private information or allow unauthorised actions. End the session and verify support independently.",
+	),
 }
 
 
@@ -528,16 +571,23 @@ def analyze_transcript(transcript: str) -> AnalysisResult:
 				for match in matches
 				if not _is_negated_credential_request(transcript, match.start())
 			]
+		if tactic == "remote_access_control":
+			matches = [
+				match
+				for match in matches
+				if not _is_negated_remote_access_request(transcript, match.start())
+			]
 		if matches:
 			detected_tactics.append(tactic)
 			indicator_matches[tactic] = matches
 
 	# A claimed authority requires separate coercive behaviour.
 	authority_coercion_context_indicators = (
-	    "isolation",
-	    "secrecy",
-	    "credential_harvesting",
-	    "payment_pressure",
+		"isolation",
+		"secrecy",
+		"credential_harvesting",
+		"payment_pressure",
+		"remote_access_control",
 	)
 	if "authority_claim" in detected_stages and any(
 	    indicator in detected_stages + detected_tactics
@@ -599,14 +649,22 @@ def analyze_transcript(transcript: str) -> AnalysisResult:
 	)
 	has_authority_context = "authority_claim" in detected_stages and any(
 		indicator in detected_stages + detected_tactics
-		for indicator in ("accusation", "isolation", "urgency", "payment_demand", "secrecy")
+		for indicator in ("accusation", "isolation", "urgency", "payment_demand", "secrecy", "remote_access_control")
 	)
 	has_coercive_context = "accusation" in detected_stages and any(
 		indicator in detected_stages + detected_tactics
-		for indicator in ("isolation", "urgency", "payment_demand", "payment_pressure", "secrecy")
+		for indicator in ("isolation", "urgency", "payment_demand", "payment_pressure", "secrecy", "remote_access_control")
+	)
+	has_remote_access_context = "remote_access_control" in detected_tactics and any(
+		indicator in detected_stages + detected_tactics
+		for indicator in (
+			"authority_claim", "accusation", "isolation", "urgency",
+			"secrecy", "credential_harvesting", "payment_demand", "payment_pressure",
+		)
 	)
 	scam_detected = (
-		has_credential_request or has_payment_context or has_authority_context or has_coercive_context
+		has_credential_request or has_payment_context or has_authority_context
+		or has_coercive_context or has_remote_access_context
 	)
 
 	# Keep the existing indicator weights and risk thresholds unchanged.
@@ -620,6 +678,7 @@ def analyze_transcript(transcript: str) -> AnalysisResult:
 		"credential_harvesting": 5,
 		"payment_pressure": 3,
 		"secrecy": 1,
+		"remote_access_control": 4,
 	}
 	risk_score = sum(
 		indicator_weights[indicator]
