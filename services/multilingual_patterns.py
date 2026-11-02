@@ -19,6 +19,7 @@ STAGE_PATTERNS = {
         re.compile(r"ക്രിമിനൽ അന്വേഷണവുമായി ബന്ധിപ്പിച്ചെന്ന്"),
         re.compile(r"\baadhaar number investigation se linked hai\b", re.I),
         re.compile(r"\bbank account mein suspicious transaction hua hai\b", re.I),
+        re.compile(r"అనుమానాస్పద లావాదేవీలు ఉన్నాయని"),
     ),
     "isolation": (
         re.compile(r"कॉल न काटें"),
@@ -39,6 +40,7 @@ STAGE_PATTERNS = {
         re.compile(r"ഉടൻ പണം അടച്ച്"),
         re.compile(r"\bfifty thousand rupees abhi transfer kijiye\b", re.I),
         re.compile(r"\babhi payment karo\b", re.I),
+        re.compile(r"ఇప్పుడే చెల్లించి"),
     ),
 }
 

@@ -118,7 +118,7 @@ def test_telugu_financial_fraud_patterns_keep_payment_demand_separate():
 	assert "urgency" in result.tactics_detected
 	assert "credential_harvesting" in result.tactics_detected
 	assert "payment_pressure" in result.tactics_detected
-	assert "payment_demand" not in result.stages_detected
+	assert "payment_demand" in result.stages_detected
 	evidence = {item.indicator: item for item in result.indicator_evidence}
 	assert evidence["payment_pressure"].exact_phrases == ["ఖాతా నిలిపివేయకుండా ఉండాలంటే"]
 	assert evidence["credential_harvesting"].exact_phrases == ["మీ OTP చెప్పండి"]
@@ -489,3 +489,26 @@ def test_authority_claim_language_expanded(transcript):
     result = analyze_transcript(transcript)
 
     assert "authority_claim" in result.stages_detected
+
+def test_telugu_evaluation_samples_match_expected_labels():
+    import json
+    from pathlib import Path
+
+    dataset_path = (
+        Path(__file__).resolve().parents[1]
+        / "data"
+        / "evaluation_dataset.json"
+    )
+    dataset = json.loads(dataset_path.read_text(encoding="utf-8"))
+    samples = [
+        sample for sample in dataset["samples"]
+        if sample["language"] == "Telugu"
+    ]
+
+    assert len(samples) == 6
+
+    for sample in samples:
+        result = analyze_transcript(sample["transcript"])
+        assert result.scam_detected is sample["expected_scam"], sample["sample_id"]
+        assert set(result.stages_detected) == set(sample["expected_stages"]), sample["sample_id"]
+        assert set(result.tactics_detected) == set(sample["expected_tactics"]), sample["sample_id"]
