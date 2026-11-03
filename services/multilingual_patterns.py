@@ -208,7 +208,6 @@ TACTIC_PATTERNS = {
         re.compile(r"இப்போது"),
         re.compile(r'ഇപ്പോൾ'),
         re.compile(r'ഇന്ന് തന്നെ'),
-        re.compile('immediately', re.I),
         re.compile('ippude', re.I),
         re.compile('aaj hi', re.I),
         re.compile('right now', re.I),

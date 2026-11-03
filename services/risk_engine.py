@@ -80,7 +80,7 @@ _EDUCATIONAL_SCOPE_BOUNDARY_PATTERN = re.compile(
 )
 _EDUCATIONAL_CONTEXT_PATTERN = re.compile(
 	r"\b(?:scam|fraud|cybercrime)[ -]awareness(?:\s+(?:class|lesson|training|exercise))?\b|"
-	r"\b(?:educational|training|cybersecurity)\s+"
+	r"\b(?:cybersecurity|security)\s+awareness\s+(?:session|workshop|seminar|program)\b|\b(?:educational|training|cybersecurity)\s+"
 	r"(?:example|discussion|scenario|class|lesson|exercise|material)\b|"
 	r"\b(?:example|sample|hypothetical)\s+(?:scam|fraud|call|script|phrase)\b|"
 	r"\b(?:for example|example script|sample script)\b|"
@@ -296,7 +296,11 @@ _TACTIC_PATTERNS = {
 			r"minutes?\b",
 			re.IGNORECASE,
 		),
-		re.compile(r"\bimmediately\b", re.IGNORECASE),
+		re.compile(
+			r"(?im)(?:^|[.!?]\s*)(?:please\s+)?"
+			r"(?:pay|transfer|send|deposit)\b[^.!?\n]{0,80}"
+			r"\b(?:immediately|right away|now)\b"
+		),
 		re.compile(
             r"\b(?:arrested|detained|jailed)\s+today\b",
             re.IGNORECASE,
@@ -582,6 +586,32 @@ def analyze_transcript(transcript: str) -> AnalysisResult:
 		if matches:
 			detected_tactics.append(tactic)
 			indicator_matches[tactic] = matches
+
+	# Immediate payment demands also provide urgency evidence.
+	payment_matches = indicator_matches.get("payment_pressure", [])
+	payment_urgency_matches = [
+		match for match in payment_matches
+		if re.search(
+			r"\b(?:immediately|right away|now)\b",
+			match.group(0),
+			re.IGNORECASE,
+		)
+	]
+
+	if payment_urgency_matches:
+		existing_urgency = indicator_matches.get("urgency", [])
+		existing_spans = {match.span() for match in existing_urgency}
+		additional_matches = [
+			match for match in payment_urgency_matches
+			if match.span() not in existing_spans
+		]
+
+		if additional_matches:
+			if "urgency" not in indicator_matches:
+				detected_tactics.append("urgency")
+			indicator_matches["urgency"] = (
+				existing_urgency + additional_matches
+			)
 
 	# A claimed authority requires separate coercive behaviour.
 	authority_coercion_context_indicators = (
