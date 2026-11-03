@@ -85,6 +85,7 @@ _EDUCATIONAL_CONTEXT_PATTERN = re.compile(
 	r"\b(?:example|sample|hypothetical)\s+(?:scam|fraud|call|script|phrase)\b|"
 	r"\b(?:for example|example script|sample script)\b|"
 	r"\bscammers?\s+(?:often\s+)?(?:say|claim|pretend|ask|use)\b|"
+	r"\b(?:a\s+)?criminals?\s+(?:may|might|can|often)\b|"
 	r"\b(?:teaching|learning|discussing)\s+about\s+(?:scams?|fraud|digital arrests?)\b|"
 	r"సైబర్ భద్రత తరగతిలో|డిజిటల్ అరెస్ట్ మోసాల గురించి చర్చించాము",
 	re.IGNORECASE,
