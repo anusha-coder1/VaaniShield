@@ -23,6 +23,7 @@ _AUTHORITY_PATTERNS = (
         r"UIDAI|income tax department|reserve bank of india|"
         r"national investigation bureau|central investigation agency|"
         r"state police cyber unit|"
+        r"fraud prevention desk(?:\s+of\s+(?:your\s+)?bank)?|"
         r"(?:your\s+)?bank(?:'s)?\s+(?:security|verification|account recovery)\s+team|"
         r"(?:payment|account recovery)\s+support department)\b",
         re.IGNORECASE,

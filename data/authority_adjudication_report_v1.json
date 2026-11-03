@@ -1,0 +1,173 @@
+{
+  "report_name": "Authority-Based Coercion Mismatch Adjudication",
+  "report_version": "1.0",
+  "source_dataset": "independent_evaluation_v1_ai_reviewed.json",
+  "source_dataset_version": "1.1-ai-reviewed",
+  "review_method": "AI-assisted preliminary annotation review",
+  "native_speaker_validation": "Not performed",
+  "status": "Proposed corrections; independent review pending",
+  "warning": "Recommendations were developed after inspecting detector mismatches. Do not apply them to the evaluation dataset or use them to claim independent evaluation performance.",
+  "definition": "Authority-based coercion requires an explicit authority claim combined with separate coercive behaviour.",
+  "mismatches": [
+    {
+      "sample_id": "EN-I-009",
+      "language": "English",
+      "transcript": "Caller: I am calling from the bank's account recovery team. Your account has an unauthorized transaction. Install this remote access application and give me control of your phone so I can reverse it.",
+      "current_expected": false,
+      "detector_predicted": true,
+      "proposed_expected": true,
+      "rationale": "Institutional bank identity combined with a remote-access request.",
+      "review_status": "Pending independent review"
+    },
+    {
+      "sample_id": "HI-I-006",
+      "language": "Hindi",
+      "transcript": "कॉलर: मैं आपके बैंक के सुरक्षा विभाग से बोल रहा हूं। आपके खाते में संदिग्ध गतिविधि देखी गई है। आपके मोबाइल पर आया ओटीपी मुझे बताइए ताकि मैं लेनदेन रोक सकूं।",
+      "current_expected": false,
+      "detector_predicted": true,
+      "proposed_expected": true,
+      "rationale": "Bank security identity combined with an OTP request.",
+      "review_status": "Pending independent review"
+    },
+    {
+      "sample_id": "HI-I-007",
+      "language": "Hindi",
+      "transcript": "कॉलर: मैं बैंक के कार्ड सत्यापन विभाग से बोल रहा हूं। आपका डेबिट कार्ड बंद होने वाला है। कृपया अपना कार्ड नंबर, समाप्ति तिथि और सीवीवी मुझे बताइए ताकि नया कार्ड जारी किया जा सके।",
+      "current_expected": false,
+      "detector_predicted": true,
+      "proposed_expected": true,
+      "rationale": "Bank card-verification identity combined with a request for card credentials.",
+      "review_status": "Pending independent review"
+    },
+    {
+      "sample_id": "HI-I-008",
+      "language": "Hindi",
+      "transcript": "कॉलर: मैं भुगतान सहायता केंद्र से बोल रहा हूं। आपका रिफंड तैयार है। पैसे आपके खाते में भेजने के लिए स्क्रीन पर अपना यूपीआई पिन दर्ज कीजिए।",
+      "current_expected": false,
+      "detector_predicted": true,
+      "proposed_expected": true,
+      "rationale": "Payment-support identity combined with a UPI PIN request.",
+      "review_status": "Pending independent review"
+    },
+    {
+      "sample_id": "TE-I-007",
+      "language": "Telugu",
+      "transcript": "కॉलर: నేను బ్యాంక్ కార్డు ధృవీకరణ విభాగం నుండి మాట్లాడుతున్నాను. మీ డెబిట్ కార్డు త్వరలో పనిచేయదు. కొత్త కార్డు జారీ చేయడానికి మీ కార్డు నంబర్, గడువు తేదీ, CVV వివరాలు చెప్పండి.",
+      "current_expected": false,
+      "detector_predicted": true,
+      "proposed_expected": true,
+      "rationale": "Bank card-verification identity combined with a request for card credentials.",
+      "review_status": "Pending independent review"
+    },
+    {
+      "sample_id": "TE-I-008",
+      "language": "Telugu",
+      "transcript": "కॉलर: నేను పేమెంట్ సపోర్ట్ కేంద్రం నుండి మాట్లాడుతున్నాను. మీ రిఫండ్ సిద్ధంగా ఉంది. డబ్బు మీ ఖాతాలో జమ కావడానికి మీ UPI PIN నమోదు చేయండి.",
+      "current_expected": false,
+      "detector_predicted": true,
+      "proposed_expected": true,
+      "rationale": "Payment-support identity combined with a UPI PIN request.",
+      "review_status": "Pending independent review"
+    },
+    {
+      "sample_id": "TA-I-005",
+      "language": "Tamil",
+      "transcript": "அழைப்பாளர்: நான் தேசிய சைபர் விசாரணை அலுவலகத்திலிருந்து பேசுகிறேன். உங்கள் அடையாள ஆவணங்கள் குற்றம் தொடர்பான போலி ஆவணங்களைத் தயாரிக்கப் பயன்படுத்தப்பட்டுள்ளன. அடுத்த பதினைந்து நிமிடங்களுக்குள் பாதுகாப்பு வைப்புத் தொகையை அனுப்ப வேண்டும். இல்லையெனில் நீங்கள் காவலில் எடுக்கப்படுவீர்கள்.",
+      "current_expected": false,
+      "detector_predicted": true,
+      "proposed_expected": true,
+      "rationale": "Investigation authority combined with a payment demand and detention threat.",
+      "review_status": "Pending independent review"
+    },
+    {
+      "sample_id": "TA-I-006",
+      "language": "Tamil",
+      "transcript": "அழைப்பாளர்: நான் உங்கள் வங்கியின் பாதுகாப்புப் பிரிவிலிருந்து பேசுகிறேன். உங்கள் கணக்கில் சந்தேகத்திற்குரிய பரிவர்த்தனை நடந்துள்ளது. உங்கள் கைபேசிக்கு வந்த OTP எண்ணை என்னிடம் சொல்லுங்கள். அந்தப் பரிவர்த்தனையை நிறுத்துகிறேன்.",
+      "current_expected": false,
+      "detector_predicted": true,
+      "proposed_expected": true,
+      "rationale": "Bank security identity combined with an OTP request.",
+      "review_status": "Pending independent review"
+    },
+    {
+      "sample_id": "TA-I-007",
+      "language": "Tamil",
+      "transcript": "அழைப்பாளர்: நான் வங்கி அட்டை சரிபார்ப்புப் பிரிவிலிருந்து பேசுகிறேன். உங்கள் பற்று அட்டை விரைவில் செயலிழக்கப் போகிறது. புதிய அட்டையை வழங்க உங்கள் அட்டை எண், காலாவதி தேதி மற்றும் CVV எண்ணைச் சொல்லுங்கள்.",
+      "current_expected": false,
+      "detector_predicted": true,
+      "proposed_expected": true,
+      "rationale": "Bank card-verification identity combined with a request for card credentials.",
+      "review_status": "Pending independent review"
+    },
+    {
+      "sample_id": "TA-I-008",
+      "language": "Tamil",
+      "transcript": "அழைப்பாளர்: நான் பணப்பரிவர்த்தனை உதவி மையத்திலிருந்து பேசுகிறேன். உங்கள் பணத்தைத் திரும்பப் பெறுவதற்கான ஏற்பாடு முடிந்துவிட்டது. உங்கள் கணக்கில் பணம் வருவதற்கு உங்கள் UPI PIN எண்ணை உள்ளிடுங்கள்.",
+      "current_expected": false,
+      "detector_predicted": true,
+      "proposed_expected": true,
+      "rationale": "Payment-support identity combined with a UPI PIN request.",
+      "review_status": "Pending independent review"
+    },
+    {
+      "sample_id": "ML-I-003",
+      "language": "Malayalam",
+      "transcript": "നിങ്ങളുടെ ബാങ്ക് അക്കൗണ്ട് കുറ്റകൃത്യത്തിൽ ഉപയോഗിച്ചിട്ടുണ്ട്. കേസ് ക്ലോസ് ചെയ്യാൻ നിങ്ങളുടെ OTP ഇപ്പോൾ പറയൂ.",
+      "current_expected": true,
+      "detector_predicted": false,
+      "proposed_expected": false,
+      "rationale": "Accusation and OTP demand, but no explicit claimed authority.",
+      "review_status": "Pending independent review"
+    },
+    {
+      "sample_id": "ML-I-006",
+      "language": "Malayalam",
+      "transcript": "നിങ്ങളുടെ ആധാർ ഉപയോഗിച്ച് അനധികൃത അക്കൗണ്ട് തുറന്നിട്ടുണ്ട്. ഇന്ന് തന്നെ പിഴ അടച്ചില്ലെങ്കിൽ അറസ്റ്റ് ചെയ്യും. ഈ നമ്പറിലേക്ക് പണം അയക്കൂ.",
+      "current_expected": true,
+      "detector_predicted": false,
+      "proposed_expected": false,
+      "rationale": "Accusation and payment threat, but no explicit claimed authority.",
+      "review_status": "Pending independent review"
+    },
+    {
+      "sample_id": "ML-I-009",
+      "language": "Malayalam",
+      "transcript": "നിങ്ങളുടെ പേരിൽ മണി ലോണ്ടറിംഗ് കേസ് രജിസ്റ്റർ ചെയ്തിട്ടുണ്ട്. കേസ് തീർക്കാൻ ഇപ്പോൾ തന്നെ സെക്യൂരിറ്റി ഡെപ്പോസിറ്റ് അയക്കണം.",
+      "current_expected": true,
+      "detector_predicted": false,
+      "proposed_expected": false,
+      "rationale": "Money-laundering accusation and deposit demand, but no explicit claimed authority.",
+      "review_status": "Pending independent review"
+    },
+    {
+      "sample_id": "MIX-I-003",
+      "language": "Indian code-mixed speech",
+      "transcript": "Aapke bank account mein illegal transaction hua hai. Case close karne ke liye abhi OTP bataiye, warna account freeze ho jayega.",
+      "current_expected": true,
+      "detector_predicted": false,
+      "proposed_expected": false,
+      "rationale": "Account accusation and OTP demand, but no explicit claimed authority.",
+      "review_status": "Pending independent review"
+    },
+    {
+      "sample_id": "MIX-I-006",
+      "language": "Indian code-mixed speech",
+      "transcript": "Your SIM is linked to a crime. Police case register ho gaya hai. Aaj hi penalty transfer karo, otherwise arrest warrant issue hoga.",
+      "current_expected": true,
+      "detector_predicted": false,
+      "proposed_expected": false,
+      "rationale": "Crime accusation and penalty threat, but no explicit claimed authority.",
+      "review_status": "Pending independent review"
+    },
+    {
+      "sample_id": "MIX-I-009",
+      "language": "Indian code-mixed speech",
+      "transcript": "Aapke naam par money laundering complaint hai. Case settlement ke liye security deposit abhi transfer karna padega.",
+      "current_expected": true,
+      "detector_predicted": false,
+      "proposed_expected": false,
+      "rationale": "Money-laundering accusation and deposit demand, but no explicit claimed authority.",
+      "review_status": "Pending independent review"
+    }
+  ]
+}

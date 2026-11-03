@@ -1,0 +1,73 @@
+{
+  "report_name": "Urgency Detection Mismatch Adjudication",
+  "report_version": "1.0",
+  "source_dataset": "independent_evaluation_v1_ai_reviewed.json",
+  "source_dataset_version": "1.1-ai-reviewed",
+  "review_method": "AI-assisted preliminary annotation review",
+  "native_speaker_validation": "Not performed",
+  "status": "Proposed corrections; independent review pending",
+  "warning": "Recommendations were developed after inspecting detector mismatches. Do not apply them to the evaluation dataset or use them to claim independent evaluation performance.",
+  "definition": "Urgency requires explicit time pressure or an immediate deadline. Isolation and threats alone do not establish urgency.",
+  "mismatches": [
+    {
+      "sample_id": "HI-I-002",
+      "language": "Hindi",
+      "transcript": "कॉलर: मैं साइबर अपराध जांच विभाग से बोल रहा हूं। आपके नाम से एक संदिग्ध बैंक खाता खोला गया है। इस जांच की जानकारी किसी रिश्तेदार को मत दीजिए। अभी कॉल पर बने रहिए और मामला बंद करवाने के लिए निर्धारित जुर्माने की रकम भेजिए।",
+      "current_expected": false,
+      "detector_predicted": true,
+      "proposed_expected": true,
+      "rationale": "The transcript includes an immediate instruction to remain on the call and send a fine.",
+      "review_status": "Pending independent review"
+    },
+    {
+      "sample_id": "TA-I-001",
+      "language": "Tamil",
+      "transcript": "அழைப்பாளர்: நான் தேசிய விசாரணை அமைப்பிலிருந்து பேசுகிறேன். உங்கள் ஆதார் விவரங்கள் பணமோசடி வழக்கில் பயன்படுத்தப்பட்டுள்ளன. இந்த வீடியோ அழைப்பை துண்டிக்காதீர்கள். உங்கள் குடும்பத்தினரிடம் இதைப் பற்றிச் சொல்லாதீர்கள். கைது நடவடிக்கையைத் தவிர்க்க இன்றே சரிபார்ப்புத் தொகையை அனுப்புங்கள்.",
+      "current_expected": false,
+      "detector_predicted": true,
+      "proposed_expected": true,
+      "rationale": "The transcript explicitly demands payment today to avoid arrest.",
+      "review_status": "Pending independent review"
+    },
+    {
+      "sample_id": "ML-I-002",
+      "language": "Malayalam",
+      "transcript": "ഞാൻ പോലീസ് ഹെഡ്ക്വാർട്ടേഴ്സിൽ നിന്നാണ്. ഈ പരിശോധനയെക്കുറിച്ച് വീട്ടുകാരോട് പറയരുത്. വീഡിയോ കോൾ കട്ട് ചെയ്യാതെ ഞങ്ങളോടൊപ്പം തുടരുക.",
+      "current_expected": true,
+      "detector_predicted": false,
+      "proposed_expected": false,
+      "rationale": "Remaining on a video call and secrecy indicate isolation, not explicit time pressure.",
+      "review_status": "Pending independent review"
+    },
+    {
+      "sample_id": "ML-I-004",
+      "language": "Malayalam",
+      "transcript": "ഞാൻ അന്വേഷണ ഉദ്യോഗസ്ഥനാണ്. നിങ്ങളുടെ അക്കൗണ്ട് മരവിപ്പിക്കാതിരിക്കാൻ ഈ പരിശോധനാ തുക ഉടൻ അയക്കണം.",
+      "current_expected": false,
+      "detector_predicted": true,
+      "proposed_expected": true,
+      "rationale": "The transcript explicitly demands that the investigation amount be sent immediately.",
+      "review_status": "Pending independent review"
+    },
+    {
+      "sample_id": "ML-I-007",
+      "language": "Malayalam",
+      "transcript": "ഞാൻ ടെലികോം അന്വേഷണ വിഭാഗത്തിൽ നിന്നാണ്. നിങ്ങളുടെ സിം ബ്ലോക്ക് ചെയ്യാതിരിക്കാൻ ലഭിച്ച OTP ഞങ്ങളോട് പറയുക.",
+      "current_expected": true,
+      "detector_predicted": false,
+      "proposed_expected": false,
+      "rationale": "A SIM-blocking threat and OTP request are present, but no explicit time deadline.",
+      "review_status": "Pending independent review"
+    },
+    {
+      "sample_id": "MIX-I-004",
+      "language": "Indian code-mixed speech",
+      "transcript": "Nenu bank security team nunchi call chestunna. Account block avvakunda undalante verification amount ippude pay cheyyali.",
+      "current_expected": false,
+      "detector_predicted": true,
+      "proposed_expected": true,
+      "rationale": "The transcript explicitly demands immediate payment of a verification amount.",
+      "review_status": "Pending independent review"
+    }
+  ]
+}
