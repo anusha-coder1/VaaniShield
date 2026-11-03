@@ -287,7 +287,8 @@
             "expected_tactics": [
                 "urgency",
                 "authority_based_coercion",
-                "secrecy"
+                "secrecy",
+                "payment_pressure"
             ],
             "native_speaker_review_required": true
         },
@@ -305,7 +306,8 @@
             ],
             "expected_tactics": [
                 "authority_based_coercion",
-                "secrecy"
+                "secrecy",
+                "urgency"
             ],
             "native_speaker_review_required": true
         },
@@ -342,7 +344,8 @@
             "expected_tactics": [
                 "urgency",
                 "authority_based_coercion",
-                "secrecy"
+                "secrecy",
+                "payment_pressure"
             ],
             "native_speaker_review_required": true
         },
@@ -359,7 +362,8 @@
             ],
             "expected_tactics": [
                 "urgency",
-                "authority_based_coercion"
+                "authority_based_coercion",
+                "payment_pressure"
             ],
             "native_speaker_review_required": true
         },
@@ -374,7 +378,8 @@
                 "accusation"
             ],
             "expected_tactics": [
-                "credential_harvesting"
+                "credential_harvesting",
+                "authority_based_coercion"
             ],
             "native_speaker_review_required": true
         },
@@ -389,7 +394,8 @@
             ],
             "expected_tactics": [
                 "urgency",
-                "credential_harvesting"
+                "credential_harvesting",
+                "authority_based_coercion"
             ],
             "native_speaker_review_required": true
         },
@@ -403,7 +409,8 @@
                 "authority_claim"
             ],
             "expected_tactics": [
-                "credential_harvesting"
+                "credential_harvesting",
+                "authority_based_coercion"
             ],
             "native_speaker_review_required": true
         },
@@ -560,7 +567,8 @@
             "expected_stages": [
                 "authority_claim",
                 "accusation",
-                "payment_demand"
+                "payment_demand",
+                "isolation"
             ],
             "expected_tactics": [
                 "authority_based_coercion",
@@ -1109,7 +1117,8 @@
             ],
             "expected_tactics": [
                 "authority_based_coercion",
-                "payment_pressure"
+                "payment_pressure",
+                "urgency"
             ],
             "native_speaker_review_required": true
         },
