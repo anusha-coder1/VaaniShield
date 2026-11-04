@@ -24,6 +24,7 @@ _AUTHORITY_PATTERNS = (
         r"national investigation bureau|central investigation agency|"
         r"state police cyber unit|"
         r"fraud prevention desk(?:\s+of\s+(?:your\s+)?bank)?|"
+        r"bank fraud prevention department|"
         r"(?:your\s+)?bank(?:'s)?\s+(?:security|verification|account recovery)\s+team|"
         r"(?:payment|account recovery)\s+support department)\b",
         re.IGNORECASE,

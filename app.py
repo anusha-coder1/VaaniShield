@@ -222,7 +222,7 @@ def render_analysis_result(result) -> None:
 			evidence = evidence_by_indicator.get(indicator)
 			label = indicator.replace("_", " ").title()
 			if evidence is None:
-				st.caption(f"{label} â€” Not detected in the supplied conversation.")
+				st.caption(f"{label} — Not detected in the supplied conversation.")
 				continue
 
 			with st.expander(label, expanded=True):
@@ -468,7 +468,7 @@ def render_how_it_works() -> None:
 	pipeline = (
 		("01", "Transcript", "Text is provided for one analysis in the current app session."),
 		("02", "Redaction", "Common Aadhaar, card, phone, and context-labeled OTP formats are replaced before analysis."),
-		("03", "Keyword baseline", "Specific phrase patterns are checked for four stages and five tactics; negated credential warnings are filtered."),
+		("03", "Keyword baseline", "Specific phrase patterns are checked for four stages and six tactics; negated credential warnings are filtered."),
 		("04", "Risk summary", "Matched indicators inform a weighted risk level, confidence estimate, and uncertainty note."),
 	)
 
@@ -499,11 +499,11 @@ def render_evaluation() -> None:
 	page_header(
 		"Synthetic regression set",
 		"Detection evaluation",
-		"A transparent summary of current keyword-baseline behavior on manually labelled synthetic conversations.",
+		"A transparent summary of the 36-sample synthetic regression dataset, separate from the 120-sample Phase 4 evaluation.",
 	)
 	st.warning(
 		"This small synthetic evaluation is not real-world validated performance. "
-		"Hindi, Telugu, Tamil, Malayalam, and code-mixed examples require native-speaker review. "
+		"Native-speaker validation has not been performed. Hindi, Telugu, Tamil, Malayalam, and code-mixed samples retain review-required flags. "
 		"Weak results are shown as measured; no samples are skipped."
 	)
 
@@ -569,12 +569,12 @@ def render_evaluation() -> None:
 					label_name: label.replace("_", " ").title(),
 					"Samples": details.get("total_samples", details.get("support", 0)),
 					"Native review needed": details.get(
-						"native_speaker_review_required_samples", "â€”"
+						"native_speaker_review_required_samples", "\u2014"
 					),
 					"Accuracy": f"{metrics['accuracy']:.1%}",
-					"Precision": f"{metrics['precision']:.1%}",
-					"Recall": f"{metrics['recall']:.1%}",
-					"F1": f"{metrics['f1_score']:.1%}",
+					"Precision": f"{metrics['precision']:.1%}" if details.get("support", 1) > 0 else "N/A",
+					"Recall": f"{metrics['recall']:.1%}" if details.get("support", 1) > 0 else "N/A",
+					"F1": f"{metrics['f1_score']:.1%}" if details.get("support", 1) > 0 else "N/A",
 					"FPR": f"{metrics['false_positive_rate']:.1%}",
 					"TPR": f"{metrics['true_positive_rate']:.1%}",
 				}
