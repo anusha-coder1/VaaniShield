@@ -597,3 +597,57 @@ def test_authority_coercion_evidence_includes_remote_access_request():
     combined_evidence = " ".join(evidence.exact_phrases).casefold()
     assert "calling from your bank" in combined_evidence
     assert "remote access application" in combined_evidence
+
+
+def test_gnani_telugu_code_mixed_payment_and_arrest_threat():
+    """Regression: actual Gnani Telugu-English transcription."""
+    transcript = "\u0c28\u0c47\u0c28\u0c41 cyber crime department \u0c28\u0c41\u0c02\u0c1a\u0c3f \u0c2e\u0c3e\u0c1f\u0c4d\u0c32\u0c3e\u0c21\u0c41\u0c24\u0c41\u0c28\u0c4d\u0c28\u0c3e\u0c28\u0c41. \u0c2e\u0c40 bank \u0c16\u0c3e\u0c24\u0c3e\u0c2a\u0c48 \u0c35\u0c3f\u0c1a\u0c3e\u0c30\u0c23 \u0c1c\u0c30\u0c41\u0c17\u0c41\u0c24\u0c41\u0c02\u0c26\u0c3f. arrest \u0c15\u0c3e\u0c15\u0c41\u0c02\u0c21\u0c3e \u0c09\u0c02\u0c21\u0c3e\u0c32\u0c02\u0c1f\u0c47, \u0c35\u0c46\u0c02\u0c1f\u0c28\u0c47 \u0c2f\u0c3e\u0c2d\u0c48 \u0c35\u0c47\u0c32 \u0c30\u0c42\u0c2a\u0c3e\u0c2f\u0c32\u0c41 transfer \u0c1a\u0c47\u0c2f\u0c3e\u0c32\u0c3f."
+
+    result = analyze_transcript(transcript)
+
+    assert "authority_claim" in result.stages_detected
+    assert "payment_demand" in result.stages_detected
+    assert "urgency" in result.tactics_detected
+    assert "payment_pressure" in result.tactics_detected
+    assert result.scam_detected is True
+
+
+def test_telugu_codemix_department_mention_without_impersonation():
+    transcript = (
+        "We discussed the cyber crime department in our college project."
+    )
+    result = analyze_transcript(transcript)
+
+    assert result.scam_detected is False
+    assert "authority_claim" not in result.stages_detected
+
+
+def test_telugu_codemix_payment_discussion_without_demand():
+    transcript = (
+        "Our training example discusses a fifty thousand rupees transfer."
+    )
+    result = analyze_transcript(transcript)
+
+    assert result.scam_detected is False
+    assert "payment_demand" not in result.stages_detected
+
+
+def test_telugu_codemix_arrest_discussion_without_pressure():
+    transcript = (
+        "We studied how scammers use arrest threats in awareness sessions."
+    )
+    result = analyze_transcript(transcript)
+
+    assert result.scam_detected is False
+    assert "payment_pressure" not in result.tactics_detected
+
+def test_benign_telugu_codemix_department_discussion():
+    transcript = 'Our class discussed cyber crime department \u0c28\u0c41\u0c02\u0c1a\u0c3f \u0c2e\u0c3e\u0c1f\u0c4d\u0c32\u0c3e\u0c21\u0c41\u0c24\u0c41\u0c28\u0c4d\u0c28\u0c3e\u0c28\u0c41 as a fictional quote.'
+    result = analyze_transcript(transcript)
+    assert result.scam_detected is False
+
+
+def test_benign_telugu_codemix_arrest_awareness():
+    transcript = 'Awareness training quoted arrest \u0c15\u0c3e\u0c15\u0c41\u0c02\u0c21\u0c3e \u0c09\u0c02\u0c21\u0c3e\u0c32\u0c02\u0c1f\u0c47 as an example of scam pressure.'
+    result = analyze_transcript(transcript)
+    assert result.scam_detected is False

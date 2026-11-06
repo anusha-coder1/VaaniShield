@@ -5,6 +5,7 @@
 
 STAGE_PATTERNS = {
     "authority_claim": (
+        re.compile(r'\bcyber\s+crime\s+department\b\s+\u0c28\u0c41\u0c02\u0c1a\u0c3f\s+\u0c2e\u0c3e\u0c1f\u0c4d\u0c32\u0c3e\u0c21\u0c41\u0c24\u0c41\u0c28\u0c4d\u0c28\u0c3e\u0c28\u0c41', re.I),
         re.compile(r"साइबर अपराध विभाग से कॉल है"),
         re.compile(
             r"నేను\s+(?:జాతీయ దర్యాప్తు సంస్థ|సైబర్ క్రైమ్ దర్యాప్తు విభాగం|"
@@ -153,6 +154,7 @@ STAGE_PATTERNS = {
         re.compile('follow our instructions alone', re.I),
     ),
     "payment_demand": (
+        re.compile(r'\u0c2f\u0c3e\u0c2d\u0c48 \u0c35\u0c47\u0c32 \u0c30\u0c42\u0c2a\u0c3e\u0c2f\u0c32\u0c41\s+\btransfer\b\s+\u0c1a\u0c47\u0c2f\u0c3e\u0c32\u0c3f', re.I),
         re.compile(r"पचास हजार रुपये भेजें"),
         re.compile(r"अभी भुगतान करें"),
         re.compile(r"உடனே பணத்தை மாற்றுங்கள்"),
@@ -237,6 +239,7 @@ TACTIC_PATTERNS = {
         re.compile('మీ UPI PIN నమోదు చేయండి'),
     ),
     "payment_pressure": (
+        re.compile(r'\barrest\b\s+\u0c15\u0c3e\u0c15\u0c41\u0c02\u0c21\u0c3e \u0c09\u0c02\u0c21\u0c3e\u0c32\u0c02\u0c1f\u0c47', re.I),
         re.compile(r"गिरफ्तारी से बचने के लिए"),
         re.compile(r"खाता बंद होने से बचाने के लिए"),
         re.compile(r"கைது தவிர்க்க"),
