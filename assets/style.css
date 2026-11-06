@@ -2,7 +2,6 @@
 /* 1. Theme tokens                                                            */
 /* Set data-theme="light" or data-theme="dark" on the document root.          */
 /* ========================================================================== */
-:root,
 :root[data-theme="light"] {
 	color-scheme: light;
 
@@ -53,7 +52,7 @@
 	--vs-space-6: 2rem;
 }
 
-:root[data-theme="dark"] {
+:root, :root[data-theme="dark"] {
 	color-scheme: dark;
 
 	--vs-bg: #09151b;
@@ -1117,4 +1116,96 @@ select:focus-visible,
 	.vs-knowledge-item {
 		min-height: 0;
 	}
+}
+
+/* ========================================================================== */
+/* VaaniShield 2.0 - Premium security interface                                */
+/* ========================================================================== */
+
+:root, :root[data-theme="dark"] {
+    --vs-bg: #080f1d;
+    --vs-bg-top: #0d1c30;
+    --vs-surface: #101f33;
+    --vs-surface-raised: #14263d;
+    --vs-surface-muted: #172b42;
+    --vs-surface-hover: #1b344c;
+
+    --vs-border: #263b52;
+    --vs-border-strong: #37516a;
+
+    --vs-text: #f0f6ff;
+    --vs-text-muted: #b4c6d8;
+    --vs-text-subtle: #8ea6bd;
+
+    --vs-accent: #5de4e0;
+    --vs-accent-hover: #8af4ee;
+    --vs-accent-contrast: #071b24;
+    --vs-accent-soft: #123b49;
+
+    --vs-focus: #5de4e0;
+    --vs-button-primary: #087f91;
+    --vs-button-primary-hover: #0a9aaa;
+    --vs-button-primary-disabled: #285965;
+
+    --vs-radius-sm: 9px;
+    --vs-radius-md: 15px;
+    --vs-radius-lg: 20px;
+
+    --vs-shadow-sm: 0 4px 14px rgb(0 0 0 / 14%);
+    --vs-shadow-md: 0 16px 40px rgb(0 0 0 / 25%);
+    --vs-shadow-focus: 0 0 0 3px rgb(93 228 224 / 22%);
+}
+
+:root[data-theme="dark"] .stApp {
+    background:
+        radial-gradient(ellipse at 90% 0%, rgb(21 83 111 / 18%), transparent 42%),
+        linear-gradient(180deg, #0d1c30 0%, #080f1d 75%);
+}
+
+:root[data-theme="dark"] .vs-stat-card,
+:root[data-theme="dark"] .vs-analysis-card,
+:root[data-theme="dark"] .vs-result-card,
+:root[data-theme="dark"] .vs-knowledge-item,
+:root[data-theme="dark"] .vs-pipeline-step {
+    background: linear-gradient(145deg, #14283e, #101f33);
+    border: 1px solid #2a425a;
+    box-shadow: 0 10px 28px rgb(0 0 0 / 16%);
+}
+
+:root[data-theme="dark"] .vs-stat-card {
+    border-top: 2px solid #5de4e0;
+}
+
+:root[data-theme="dark"] .vs-brand-mark {
+    background: linear-gradient(135deg, #087f91, #5de4e0);
+    border-color: #5de4e0;
+    box-shadow: 0 0 24px rgb(93 228 224 / 15%);
+}
+
+:root[data-theme="dark"] .vs-result-banner {
+    background: linear-gradient(120deg, #14283e, #101f33);
+    box-shadow: var(--vs-shadow-sm);
+}
+
+:root[data-theme="dark"] .st-key-vs-horizontal-nav {
+    border-bottom-color: #2a425a;
+}
+
+:root[data-theme="dark"] .st-key-vs-horizontal-nav [data-testid="stBaseButton-primary"] {
+    background: #123b49 !important;
+    border-bottom-color: #5de4e0 !important;
+    color: #5de4e0 !important;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .vs-stat-card,
+    .vs-knowledge-item {
+        transition: transform 180ms ease, box-shadow 180ms ease;
+    }
+
+    .vs-stat-card:hover,
+    .vs-knowledge-item:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--vs-shadow-md);
+    }
 }
