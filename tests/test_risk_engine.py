@@ -424,6 +424,35 @@ def test_investigations_and_ordinary_payments_are_not_automatically_scams(transc
 	assert "payment_pressure" not in result.tactics_detected
 
 
+
+
+@pytest.mark.parametrize(
+    "transcript",
+    [
+        "Do not transfer money to anyone.",
+        "Never send money to an unknown account.",
+        "Do not pay the fine.",
+        "You should not deposit the verification fee.",
+    ],
+)
+def test_negated_payment_instructions_are_not_detected(transcript):
+    result = analyze_transcript(transcript)
+
+    assert "payment_demand" not in result.stages_detected
+    assert "payment_pressure" not in result.tactics_detected
+    assert result.scam_detected is False
+
+
+def test_negated_payment_warning_does_not_hide_a_later_suspicious_demand():
+    result = analyze_transcript(
+        "Do not transfer money to anyone. "
+        "The caller says transfer fifty thousand rupees to avoid arrest."
+    )
+
+    assert "payment_demand" in result.stages_detected
+    assert "payment_pressure" in result.tactics_detected
+    assert result.scam_detected is True
+
 def test_harmless_police_station_and_bank_mentions_are_not_a_scam():
 	result = analyze_transcript(
 		"I visited the police station near my bank to ask about opening an account."

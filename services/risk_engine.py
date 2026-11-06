@@ -125,6 +125,20 @@ def _is_negated_remote_access_request(transcript: str, match_start: int) -> bool
 	return bool(_CREDENTIAL_NEGATION_PATTERN.search(preceding_text))
 
 
+def _is_negated_payment_request(transcript: str, match_start: int) -> bool:
+    """Ignore locally negated payment instructions."""
+    preceding = transcript[:match_start]
+    boundaries = list(_CREDENTIAL_SCOPE_BOUNDARY_PATTERN.finditer(preceding))
+    if boundaries:
+        preceding = preceding[boundaries[-1].end():]
+    return bool(re.search(
+        r"\b(?:never|do not|don't|should not|shouldn't|must not|mustn't|not to)\b"
+        r"(?:\s+\w+){0,3}\s*$",
+        preceding,
+        re.IGNORECASE,
+    ))
+
+
 def _is_educational_match(transcript: str, match_start: int) -> bool:
 	"""Ignore a match only when its current clause is explicitly educational."""
 	preceding_text = transcript[:match_start]
@@ -562,6 +576,11 @@ def analyze_transcript(transcript: str) -> AnalysisResult:
 			for match in pattern.finditer(transcript)
 			if not _is_educational_match(transcript, match.start())
 		]
+		if stage == "payment_demand":
+		    matches = [
+		        match for match in matches
+		        if not _is_negated_payment_request(transcript, match.start())
+		    ]
 		if matches:
 			detected_stages.append(stage)
 			indicator_matches[stage] = matches
@@ -573,6 +592,11 @@ def analyze_transcript(transcript: str) -> AnalysisResult:
 			for match in pattern.finditer(transcript)
 			if not _is_educational_match(transcript, match.start())
 		]
+		if tactic == "payment_pressure":
+		    matches = [
+		        match for match in matches
+		        if not _is_negated_payment_request(transcript, match.start())
+		    ]
 		if tactic == "credential_harvesting":
 			matches = [
 				match
