@@ -86,7 +86,9 @@ _EDUCATIONAL_CONTEXT_PATTERN = re.compile(
 	r"(?:example|discussion|scenario|class|lesson|exercise|material)\b|"
 	r"\b(?:example|sample|hypothetical)\s+(?:scam|fraud|call|script|phrase)\b|"
 	r"\b(?:for example|example script|sample script)\b|"
-	r"\bscammers?\s+(?:often\s+)?(?:say|claim|pretend|ask|use)\b|"
+	r"\b(?:a\s+)?(?:scammer|scammers|fraudster|fraudsters)\s+"
+	r"(?:(?:may|might|can|could|would|often)\s+)?"
+	r"(?:say|claim|pretend|ask|use|instruct|tell)\b|"
 	r"\bscammers?\s+(?:may|might|can|often)\s+impersonate\b|"
 	r"\b(?:a\s+)?criminals?\s+(?:may|might|can|often)\b|"
 	r"\b(?:teaching|learning|discussing)\s+about\s+(?:scams?|fraud|digital arrests?)\b|"
@@ -329,6 +331,19 @@ _TACTIC_PATTERNS = {
 	),
 	"authority_based_coercion": (),
 	"remote_access_control": (
+			re.compile(
+				r"\b(?:let|allow)\s+"
+				r"(?:(?:our|the|your)\s+)?"
+				r"(?:officer|agent|representative|support\s+(?:agent|staff))\s+"
+				r"(?:view|see|watch)\s+(?:your\s+)?screen\b"
+				r"[^.!?\n]{0,100}"
+				r"\b(?:open|log\s+in\s+to|access|use)\s+"
+				r"(?:your\s+)?"
+				r"(?:(?:real|actual|personal|live)\s+)?"
+				r"(?:banking|bank|payment)\s+"
+				r"(?:app|application|account)\b",
+				re.IGNORECASE,
+			),
 		re.compile(
 			r"\b(?:install|download)\s+(?:(?:this|the)\s+)?"
 			r"(?:remote[- ]access|remote[- ]control)\s+"
@@ -608,6 +623,22 @@ def analyze_transcript(transcript: str) -> AnalysisResult:
 				match
 				for match in matches
 				if not _is_negated_remote_access_request(transcript, match.start())
+			]
+			matches = [
+				match for match in matches
+				if not (
+					match.re is _TACTIC_PATTERNS["remote_access_control"][0]
+					and re.search(
+						r"\b(?:using|with)\s+(?:a\s+)?(?:demo|dummy|sandbox|test|practice)\s+account\b",
+						transcript[match.end():match.end() + 80].split(".")[0],
+						re.IGNORECASE,
+					)
+					and not re.search(
+						r"\b(?:real|actual|personal|live)\s+(?:bank|banking)?\s*account\b",
+						transcript[match.start():match.end() + 80].split(".")[0],
+						re.IGNORECASE,
+					)
+				)
 			]
 		if matches:
 			detected_tactics.append(tactic)
