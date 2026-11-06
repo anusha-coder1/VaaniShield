@@ -1,0 +1,161 @@
+{
+  "dataset_name": "Phase 7 Challenge V2 - Development",
+  "dataset_version": "2.0-development",
+  "description": "Twelve synthetic development challenge examples. Not an independent or real-world accuracy benchmark.",
+  "labeling_note": "Labels are provisional and require review. Non-English examples require native-speaker verification.",
+  "samples": [
+    {
+      "sample_id": "P7V2-EN-01",
+      "language": "English",
+      "conversation_type": "financial fraud scam",
+      "transcript": "Caller: I am calling from the bank's security review team. Your account will remain frozen unless you share the verification code that just arrived on your phone.",
+      "expected_scam": true,
+      "expected_stages": [
+        "authority_claim"
+      ],
+      "expected_tactics": [
+        "credential_harvesting",
+        "urgency"
+      ],
+      "native_speaker_review_required": false
+    },
+    {
+      "sample_id": "P7V2-EN-02",
+      "language": "English",
+      "conversation_type": "digital-arrest scam",
+      "transcript": "Caller: Your identity is under criminal investigation. You must stay on this call and keep this confidential. Send the security deposit before the review can end.",
+      "expected_scam": true,
+      "expected_stages": [
+        "accusation",
+        "isolation",
+        "payment_demand"
+      ],
+      "expected_tactics": [
+        "secrecy",
+        "payment_pressure"
+      ],
+      "native_speaker_review_required": false
+    },
+    {
+      "sample_id": "P7V2-EN-03",
+      "language": "English",
+      "conversation_type": "genuine banking conversation",
+      "transcript": "Bank representative: Your replacement debit card is ready. You can collect it from your branch during business hours. We will not ask for your PIN or OTP.",
+      "expected_scam": false,
+      "expected_stages": [],
+      "expected_tactics": [],
+      "native_speaker_review_required": false
+    },
+    {
+      "sample_id": "P7V2-EN-04",
+      "language": "English",
+      "conversation_type": "educational discussion about scams",
+      "transcript": "Teacher: A fraudster may pretend to be an investigator and demand money. This is an example of a scam warning, not an instruction to transfer funds.",
+      "expected_scam": false,
+      "expected_stages": [],
+      "expected_tactics": [],
+      "native_speaker_review_required": false
+    },
+    {
+      "sample_id": "P7V2-HI-01",
+      "language": "Hindi",
+      "conversation_type": "financial fraud scam",
+      "transcript": "कॉलर: मैं बैंक से बोल रहा हूँ। आपका खाता बंद हो जाएगा। अभी OTP बताइए।",
+      "expected_scam": true,
+      "expected_stages": [
+        "authority_claim"
+      ],
+      "expected_tactics": [
+        "credential_harvesting",
+        "urgency"
+      ],
+      "native_speaker_review_required": true
+    },
+    {
+      "sample_id": "P7V2-HI-02",
+      "language": "Hindi",
+      "conversation_type": "protective OTP/security warning",
+      "transcript": "बैंक कर्मचारी: अपना OTP किसी को मत बताइए। बैंक आपसे OTP नहीं मांगेगा।",
+      "expected_scam": false,
+      "expected_stages": [],
+      "expected_tactics": [],
+      "native_speaker_review_required": true
+    },
+    {
+      "sample_id": "P7V2-TE-01",
+      "language": "Telugu",
+      "conversation_type": "digital-arrest scam",
+      "transcript": "కాలర్: మీపై కేసు నమోదైంది. ఎవరికీ చెప్పకండి. వెంటనే డబ్బులు పంపండి.",
+      "expected_scam": true,
+      "expected_stages": [
+        "accusation",
+        "payment_demand"
+      ],
+      "expected_tactics": [
+        "secrecy",
+        "urgency"
+      ],
+      "native_speaker_review_required": true
+    },
+    {
+      "sample_id": "P7V2-TE-02",
+      "language": "Telugu",
+      "conversation_type": "protective OTP/security warning",
+      "transcript": "మీ OTP ఎవరికీ చెప్పకండి. అనుమానాస్పద కాల్స్ గురించి బ్యాంకుకు తెలియజేయండి.",
+      "expected_scam": false,
+      "expected_stages": [],
+      "expected_tactics": [],
+      "native_speaker_review_required": true
+    },
+    {
+      "sample_id": "P7V2-TA-01",
+      "language": "Tamil",
+      "conversation_type": "financial fraud scam",
+      "transcript": "உங்கள் வங்கி கணக்கு முடக்கப்படும். உடனே OTP சொல்லுங்கள்.",
+      "expected_scam": true,
+      "expected_stages": [
+        "authority_claim"
+      ],
+      "expected_tactics": [
+        "credential_harvesting",
+        "urgency"
+      ],
+      "native_speaker_review_required": true
+    },
+    {
+      "sample_id": "P7V2-TA-02",
+      "language": "Tamil",
+      "conversation_type": "protective OTP/security warning",
+      "transcript": "உங்கள் OTP யாரிடமும் சொல்லாதீர்கள். வங்கி இதைக் கேட்காது.",
+      "expected_scam": false,
+      "expected_stages": [],
+      "expected_tactics": [],
+      "native_speaker_review_required": true
+    },
+    {
+      "sample_id": "P7V2-ML-01",
+      "language": "Malayalam",
+      "conversation_type": "financial fraud scam",
+      "transcript": "നിങ്ങളുടെ ബാങ്ക് അക്കൗണ്ട് ബ്ലോക്ക് ചെയ്യും. ഉടന് OTP പറയൂ.",
+      "expected_scam": true,
+      "expected_stages": [
+        "authority_claim"
+      ],
+      "expected_tactics": [
+        "credential_harvesting",
+        "urgency"
+      ],
+      "native_speaker_review_required": true
+    },
+    {
+      "sample_id": "P7V2-ML-02",
+      "language": "Malayalam",
+      "conversation_type": "protective OTP/security warning",
+      "transcript": "നിങ്ങളുടെ OTP ആരോടും പറയരുത്. ബാങ്ക് അത് ചോദിക്കില്ല.",
+      "expected_scam": false,
+      "expected_stages": [],
+      "expected_tactics": [],
+      "native_speaker_review_required": true
+    }
+  ]
+}

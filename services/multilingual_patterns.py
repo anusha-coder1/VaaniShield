@@ -154,6 +154,7 @@ STAGE_PATTERNS = {
         re.compile('follow our instructions alone', re.I),
     ),
     "payment_demand": (
+        re.compile(r"డబ్బులు\s+పంపండి"),
         re.compile(r'\u0c2f\u0c3e\u0c2d\u0c48 \u0c35\u0c47\u0c32 \u0c30\u0c42\u0c2a\u0c3e\u0c2f\u0c32\u0c41\s+\btransfer\b\s+\u0c1a\u0c47\u0c2f\u0c3e\u0c32\u0c3f', re.I),
         re.compile(r"पचास हजार रुपये भेजें"),
         re.compile(r"अभी भुगतान करें"),
@@ -219,6 +220,9 @@ TACTIC_PATTERNS = {
         re.compile('మీ డెబిట్ కార్డు త్వరలో పనిచేయదు'),
     ),
     "credential_harvesting": (
+        re.compile(r"OTP\s+\u0d2a\u0d31\u0d2f\u0d42"),
+        re.compile(r"OTP\s+\u0b9a\u0bca\u0bb2\u0bcd\u0bb2\u0bc1\u0b99\u0bcd\u0b95\u0bb3\u0bcd"),
+        re.compile(r"OTP\s+\u092c\u0924\u093e\u0907\u090f"),
         re.compile(r"अपना OTP बताएं"),
         re.compile(r"OTP-ஐ பகிருங்கள்"),
         re.compile(r"OTP പറയുക"),

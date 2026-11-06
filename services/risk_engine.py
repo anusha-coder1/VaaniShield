@@ -1,4 +1,4 @@
-import re
+﻿import re
 
 from models.schemas import AnalysisResult, IndicatorEvidence, RiskLevel
 
@@ -377,7 +377,7 @@ _TACTIC_PATTERNS = {
 		re.compile(r"మీ\s+OTP\s+చెప్ప(?:ండి|వద్దు)"),
 		re.compile(
 			r"\b(?:share|send|provide|tell me|read out|give me|reveal|disclose|"
-			r"ask(?:s)? for)\s+(?:your\s+|an?\s+)?"
+			r"ask(?:s)? for)\s+(?:your\s+|the\s+|an?\s+)?"
 			r"(?:otp|one[ -]time password|verification code|password|pin|cvv|"
 			r"card number|bank details|account details)\b",
 			re.IGNORECASE,
