@@ -222,10 +222,10 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
-              <TranscriptAnalyzer key={audioTranscriptVersion} initialTranscript={audioTranscript} />
-
+            <div className="space-y-6">
               <AudioUploader onTranscriptReady={(text) => { setAudioTranscript(text); setAudioTranscriptVersion((v) => v + 1); }} />
+
+              <TranscriptAnalyzer key={audioTranscriptVersion} initialTranscript={audioTranscript} />
             </div>
           </div>
         )}
