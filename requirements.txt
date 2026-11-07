@@ -1,6 +1,10 @@
-streamlit
+﻿streamlit
 pydantic
 pytest
 python-dotenv
 requests
 mutagen
+fastapi
+uvicorn
+python-multipart
+gnani-vachana
