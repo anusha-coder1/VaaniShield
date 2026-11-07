@@ -38,6 +38,35 @@ def analyze_conversation(request: AnalyzeRequest):
     return analyze(request.transcript)
 
 
+@app.post("/api/analyze-hybrid")
+def analyze_hybrid_conversation(request: AnalyzeRequest):
+    """Return independent rule and AI assessments with a safe rules fallback."""
+    from services.gemini_analyzer import analyze_with_gemini
+    from services.redaction import redact_sensitive_data
+
+    rule_result = analyze(request.transcript)
+
+    try:
+        redacted = redact_sensitive_data(request.transcript)
+        ai_result = analyze_with_gemini(redacted)
+    except RuntimeError:
+        return {
+            "rule_analysis": rule_result.model_dump(mode="json"),
+            "ai_analysis": None,
+            "ai_status": "fallback",
+            "verdict_agreement": None,
+            "risk_agreement": None,
+        }
+
+    return {
+        "rule_analysis": rule_result.model_dump(mode="json"),
+        "ai_analysis": ai_result.model_dump(mode="json"),
+        "ai_status": "available",
+        "verdict_agreement": rule_result.scam_detected == ai_result.scam_detected,
+        "risk_agreement": rule_result.risk_level == ai_result.risk_level,
+    }
+
+
 MAX_AUDIO_BYTES = 15 * 1024 * 1024
 
 

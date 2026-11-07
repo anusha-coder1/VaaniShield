@@ -24,6 +24,24 @@ type AnalysisResult = {
   uncertainty_note: string;
 };
 
+type GeminiAssessment = {
+  scam_detected: boolean;
+  risk_level: AnalysisResult["risk_level"];
+  stages_detected: string[];
+  tactics_detected: string[];
+  indicator_evidence: IndicatorEvidence[];
+  explanation: string;
+  uncertainty_note: string;
+};
+
+type HybridResponse = {
+  rule_analysis: AnalysisResult;
+  ai_analysis: GeminiAssessment | null;
+  ai_status: "available" | "fallback";
+  verdict_agreement: boolean | null;
+  risk_agreement: boolean | null;
+};
+
 const riskColors = {
   LOW: "border-emerald-400/30 bg-emerald-400/10 text-emerald-300",
   MEDIUM: "border-yellow-400/30 bg-yellow-400/10 text-yellow-300",
@@ -38,15 +56,23 @@ function readable(value: string) {
 export default function TranscriptAnalyzer({ initialTranscript = "" }: { initialTranscript?: string }) {
   const [transcript, setTranscript] = useState(initialTranscript);
   const [result, setResult] = useState<AnalysisResult | null>(null);
+  const [hybridResult, setHybridResult] = useState<HybridResponse | null>(null);
+  const [useAi, setUseAi] = useState(false);
+  const [aiConsent, setAiConsent] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   async function runAnalysis() {
     if (!transcript.trim() || loading) return;
+    if (useAi && !aiConsent) {
+      setError("Please confirm consent before using Gemini AI analysis.");
+      return;
+    }
 
     setLoading(true);
     setError("");
     setResult(null);
+    setHybridResult(null);
 
     try {
       const baseUrl = process.env.NEXT_PUBLIC_API_URL;
@@ -55,7 +81,7 @@ export default function TranscriptAnalyzer({ initialTranscript = "" }: { initial
         throw new Error("Analysis API URL is not configured.");
       }
 
-      const response = await fetch(`${baseUrl}/api/analyze`, {
+      const response = await fetch(`${baseUrl}${useAi ? "/api/analyze-hybrid" : "/api/analyze"}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ transcript: transcript.trim() }),
@@ -69,8 +95,14 @@ export default function TranscriptAnalyzer({ initialTranscript = "" }: { initial
         );
       }
 
-      const data: AnalysisResult = await response.json();
-      setResult(data);
+      if (useAi) {
+        const data: HybridResponse = await response.json();
+        setResult(data.rule_analysis);
+        setHybridResult(data);
+      } else {
+        const data: AnalysisResult = await response.json();
+        setResult(data);
+      }
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Unable to analyze the transcript."
@@ -112,6 +144,57 @@ export default function TranscriptAnalyzer({ initialTranscript = "" }: { initial
           className="min-h-56 w-full resize-y rounded-xl border border-white/10 bg-[#071421] p-5 text-sm leading-7 text-slate-100 outline-none transition placeholder:text-slate-600 focus:border-cyan-300/50"
         />
 
+        <div className="mt-5 space-y-3 rounded-xl border border-white/10 bg-[#071421] p-4">
+          <label className="flex cursor-pointer items-start gap-3">
+            <input
+              type="checkbox"
+              checked={useAi}
+              onChange={(event) => {
+                setUseAi(event.target.checked);
+                setAiConsent(false);
+                setResult(null);
+                setHybridResult(null);
+                setError("");
+              }}
+              className="mt-1 h-4 w-4 accent-cyan-300"
+            />
+            <span>
+              <span className="block text-sm font-semibold text-slate-100">
+                Enable Gemini AI comparison
+              </span>
+              <span className="mt-1 block text-xs leading-5 text-slate-400">
+                Compare contextual AI findings with VaaniShield's rule-based assessment.
+              </span>
+            </span>
+          </label>
+
+          {useAi && (
+            <div className="space-y-3 border-t border-white/10 pt-3">
+              <p className="text-xs leading-5 text-amber-200/90">
+                Privacy notice: Your transcript will be redacted by the VaaniShield
+                backend before being sent to Google's Gemini service.
+                Redaction may not remove every sensitive detail. Avoid submitting
+                real personal or confidential conversations during this demo.
+              </p>
+              <label className="flex cursor-pointer items-start gap-3">
+                <input
+                  type="checkbox"
+                  checked={aiConsent}
+                  onChange={(event) => {
+                    setAiConsent(event.target.checked);
+                    setError("");
+                  }}
+                  className="mt-1 h-4 w-4 accent-cyan-300"
+                />
+                <span className="text-xs leading-5 text-slate-300">
+                  I understand and agree to external AI processing of the
+                  redacted transcript.
+                </span>
+              </label>
+            </div>
+          )}
+        </div>
+
         <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
           <span className="text-xs text-slate-500">
             {transcript.length.toLocaleString()} / 20,000 characters
@@ -143,6 +226,105 @@ export default function TranscriptAnalyzer({ initialTranscript = "" }: { initial
           </div>
         )}
       </section>
+
+      {hybridResult && (
+        <section aria-live="polite" className="rounded-2xl border border-cyan-300/20 bg-[#0e1d2e] p-6 sm:p-8">
+          <div className="mb-5">
+            <h2 className="text-xl font-semibold text-cyan-200">
+              Gemini AI comparison
+            </h2>
+            <p className="mt-1 text-sm text-slate-400">
+              Independent contextual assessment compared with the rule engine.
+            </p>
+          </div>
+
+          {hybridResult.ai_status === "fallback" || !hybridResult.ai_analysis ? (
+            <div className="rounded-xl border border-amber-300/20 bg-amber-300/5 p-4 text-sm text-amber-100">
+              Gemini is currently unavailable. The rule-based assessment below
+              remains available.
+            </div>
+          ) : (
+            <div className="space-y-5">
+              <div className="grid gap-3 sm:grid-cols-2">
+                <div className="rounded-xl border border-white/10 bg-[#071421] p-4">
+                  <p className="text-xs text-slate-400">Rule engine risk</p>
+                  <p className="mt-2 text-lg font-semibold">
+                    {hybridResult.rule_analysis.risk_level}
+                  </p>
+                </div>
+                <div className="rounded-xl border border-white/10 bg-[#071421] p-4">
+                  <p className="text-xs text-slate-400">Gemini AI risk</p>
+                  <span className={`mt-2 inline-block rounded-full border px-3 py-1 text-sm font-semibold ${riskColors[hybridResult.ai_analysis.risk_level]}`}>
+                    {hybridResult.ai_analysis.risk_level}
+                  </span>
+                </div>
+              </div>
+
+              <p className="text-sm text-slate-300">
+                Scam verdict: {hybridResult.verdict_agreement ? "Both systems agree." : "The systems disagree."}
+                {" "}Risk level: {hybridResult.risk_agreement ? "Both systems agree." : "The systems disagree."}
+              </p>
+
+              <div>
+                <h3 className="mb-2 text-sm font-semibold text-cyan-200">
+                  Gemini explanation
+                </h3>
+                <p className="text-sm leading-6 text-slate-300">
+                  {hybridResult.ai_analysis.explanation}
+                </p>
+              </div>
+
+              <div>
+                <h3 className="mb-3 text-sm font-semibold text-cyan-200">
+                  Gemini detected tactics
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  {hybridResult.ai_analysis.tactics_detected.length ? (
+                    hybridResult.ai_analysis.tactics_detected.map((tactic) => (
+                      <span key={tactic} className="rounded-lg border border-cyan-300/20 bg-cyan-300/10 px-3 py-2 text-xs capitalize text-cyan-200">
+                        {readable(tactic)}
+                      </span>
+                    ))
+                  ) : (
+                    <p className="text-sm text-slate-400">None detected.</p>
+                  )}
+                </div>
+              </div>
+
+              <div>
+                <h3 className="mb-3 text-sm font-semibold text-cyan-200">
+                  Gemini verified evidence
+                </h3>
+                {hybridResult.ai_analysis.indicator_evidence.length ? (
+                  <div className="space-y-3">
+                    {hybridResult.ai_analysis.indicator_evidence.map((item, index) => (
+                      <div key={`${item.indicator}-${index}`} className="rounded-xl border border-white/10 bg-[#071421] p-4">
+                        <p className="text-sm font-semibold capitalize text-cyan-200">
+                          {readable(item.indicator)}
+                        </p>
+                        {item.exact_phrases.map((phrase, phraseIndex) => (
+                          <blockquote key={phraseIndex} className="mt-2 border-l-2 border-cyan-300/50 pl-3 text-sm italic text-slate-200">
+                            {phrase}
+                          </blockquote>
+                        ))}
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-sm text-slate-400">
+                    No transcript-matched evidence was returned.
+                  </p>
+                )}
+              </div>
+
+              <p className="text-xs leading-5 text-slate-400">
+                {hybridResult.ai_analysis.uncertainty_note}
+                {" "}AI findings are not proof of fraud.
+              </p>
+            </div>
+          )}
+        </section>
+      )}
 
       {result && (
         <section aria-live="polite" className="space-y-5">
