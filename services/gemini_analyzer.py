@@ -81,7 +81,7 @@ def analyze_with_gemini(redacted_transcript: str) -> GeminiAssessment:
                 "Content-Type": "application/json",
             },
             json=payload,
-            timeout=25,
+            timeout=60,
         )
         response.raise_for_status()
         data = response.json()

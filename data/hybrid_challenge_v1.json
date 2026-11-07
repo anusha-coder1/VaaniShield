@@ -1,0 +1,156 @@
+{
+  "dataset_name": "VaaniShield Hybrid Challenge v1",
+  "dataset_version": "1.0",
+  "description": "Synthetic English challenge cases; labels frozen before first detector evaluation.",
+  "labeling_note": "Assistant-drafted labels; require independent review. Do not tune detectors before preserving first-run results.",
+  "samples": [
+    {
+      "sample_id": "HC-01",
+      "language": "English",
+      "conversation_type": "financial fraud scam",
+      "transcript": "This is the bank fraud desk. Your account will be frozen in ten minutes unless you tell me the OTP that just arrived.",
+      "expected_scam": true,
+      "expected_stages": [],
+      "expected_tactics": [
+        "urgency",
+        "authority_based_coercion",
+        "credential_harvesting"
+      ],
+      "native_speaker_review_required": false
+    },
+    {
+      "sample_id": "HC-02",
+      "language": "English",
+      "conversation_type": "protective OTP/security warning",
+      "transcript": "Our security workshop explains that a caller claiming your account will be frozen may demand an OTP. Never give them the code.",
+      "expected_scam": false,
+      "expected_stages": [],
+      "expected_tactics": [],
+      "native_speaker_review_required": false
+    },
+    {
+      "sample_id": "HC-03",
+      "language": "English",
+      "conversation_type": "financial fraud scam",
+      "transcript": "To reverse a suspicious payment, install the screen-sharing app I sent you and allow me to control your phone.",
+      "expected_scam": true,
+      "expected_stages": [],
+      "expected_tactics": [
+        "remote_access_control"
+      ],
+      "native_speaker_review_required": false
+    },
+    {
+      "sample_id": "HC-04",
+      "language": "English",
+      "conversation_type": "genuine banking conversation",
+      "transcript": "The bank employee explained where the dispute form is located. She did not ask for remote access, passwords, or verification codes.",
+      "expected_scam": false,
+      "expected_stages": [],
+      "expected_tactics": [],
+      "native_speaker_review_required": false
+    },
+    {
+      "sample_id": "HC-05",
+      "language": "English",
+      "conversation_type": "digital-arrest scam",
+      "transcript": "I am an investigating officer. A criminal case has been filed against you. Stay on this call, tell nobody, and transfer the security deposit now.",
+      "expected_scam": true,
+      "expected_stages": [
+        "authority_claim",
+        "accusation",
+        "isolation",
+        "payment_demand"
+      ],
+      "expected_tactics": [
+        "authority_based_coercion",
+        "secrecy",
+        "payment_pressure"
+      ],
+      "native_speaker_review_required": false
+    },
+    {
+      "sample_id": "HC-06",
+      "language": "English",
+      "conversation_type": "educational discussion about scams",
+      "transcript": "In today's class we will examine fake police calls that threaten arrest and request a security deposit. These are warning signs, not instructions to pay.",
+      "expected_scam": false,
+      "expected_stages": [],
+      "expected_tactics": [],
+      "native_speaker_review_required": false
+    },
+    {
+      "sample_id": "HC-07",
+      "language": "English",
+      "conversation_type": "financial fraud scam",
+      "transcript": "Your electricity service will be disconnected tonight. Pay the overdue amount using this personal payment link immediately.",
+      "expected_scam": true,
+      "expected_stages": [],
+      "expected_tactics": [
+        "urgency",
+        "payment_pressure"
+      ],
+      "native_speaker_review_required": false
+    },
+    {
+      "sample_id": "HC-08",
+      "language": "English",
+      "conversation_type": "genuine banking conversation",
+      "transcript": "I received a normal electricity bill reminder. I checked the amount in the official provider app and scheduled payment for next week.",
+      "expected_scam": false,
+      "expected_stages": [],
+      "expected_tactics": [],
+      "native_speaker_review_required": false
+    },
+    {
+      "sample_id": "HC-09",
+      "language": "English",
+      "conversation_type": "financial fraud scam",
+      "transcript": "I work for the courier company. Your parcel is held. Send me your card number and security code so I can release it.",
+      "expected_scam": true,
+      "expected_stages": [],
+      "expected_tactics": [
+        "credential_harvesting"
+      ],
+      "native_speaker_review_required": false
+    },
+    {
+      "sample_id": "HC-10",
+      "language": "English",
+      "conversation_type": "protective OTP/security warning",
+      "transcript": "A courier company should not need your card security code to release a parcel. Report any caller who asks for that information.",
+      "expected_scam": false,
+      "expected_stages": [],
+      "expected_tactics": [],
+      "native_speaker_review_required": false
+    },
+    {
+      "sample_id": "HC-11",
+      "language": "English",
+      "conversation_type": "digital-arrest scam",
+      "transcript": "You are under digital arrest. Do not contact your family. Keep your camera on while we investigate, and send the verification payment.",
+      "expected_scam": true,
+      "expected_stages": [
+        "authority_claim",
+        "isolation",
+        "payment_demand"
+      ],
+      "expected_tactics": [
+        "authority_based_coercion",
+        "secrecy",
+        "payment_pressure"
+      ],
+      "native_speaker_review_required": false
+    },
+    {
+      "sample_id": "HC-12",
+      "language": "English",
+      "conversation_type": "legitimate police verification discussion",
+      "transcript": "The officer explained that I could visit the station during office hours to verify the notice. No money, secrecy, or video call was required.",
+      "expected_scam": false,
+      "expected_stages": [],
+      "expected_tactics": [],
+      "native_speaker_review_required": false
+    }
+  ]
+}

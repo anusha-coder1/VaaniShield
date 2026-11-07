@@ -1,0 +1,115 @@
+{
+  "dataset": "data/hybrid_challenge_v1.json",
+  "dataset_description": "12 synthetic AI-authored English cases; labels require independent review",
+  "rule_engine": {
+    "tp": 3,
+    "tn": 6,
+    "fp": 0,
+    "fn": 3,
+    "missed_cases": [
+      "HC-03",
+      "HC-07",
+      "HC-09"
+    ]
+  },
+  "gemini": {
+    "classification_after_retries": {
+      "tp": 6,
+      "tn": 6,
+      "fp": 0,
+      "fn": 0
+    },
+    "first_attempt": {
+      "successful_assessments": 11,
+      "failed_assessments": 1,
+      "failed_cases": [
+        "HC-09"
+      ]
+    },
+    "hc09_retry_history": [
+      "Initial assessment failed",
+      "Diagnostic retry with 25-second timeout failed: ReadTimeout",
+      "Retry with 60-second timeout succeeded: scam=True, risk=CRITICAL"
+    ],
+    "cases_with_empty_scam_tactics": [
+      "HC-01",
+      "HC-05",
+      "HC-07"
+    ],
+    "limitations": [
+      "Small synthetic dataset, not representative of real-world traffic",
+      "Labels have not been independently reviewed",
+      "HC-09 required retries; classification accuracy excludes API failures",
+      "Structured tactic extraction was incomplete on some scams"
+    ]
+  },
+  "gemini_results": {
+    "HC-01": {
+      "scam": true,
+      "risk": "CRITICAL",
+      "tactics": []
+    },
+    "HC-02": {
+      "scam": false,
+      "risk": "LOW",
+      "tactics": []
+    },
+    "HC-03": {
+      "scam": true,
+      "risk": "CRITICAL",
+      "tactics": [
+        "remote_access_control"
+      ]
+    },
+    "HC-04": {
+      "scam": false,
+      "risk": "LOW",
+      "tactics": []
+    },
+    "HC-05": {
+      "scam": true,
+      "risk": "CRITICAL",
+      "tactics": []
+    },
+    "HC-06": {
+      "scam": false,
+      "risk": "LOW",
+      "tactics": []
+    },
+    "HC-07": {
+      "scam": true,
+      "risk": "CRITICAL",
+      "tactics": []
+    },
+    "HC-08": {
+      "scam": false,
+      "risk": "LOW",
+      "tactics": []
+    },
+    "HC-09": {
+      "scam": true,
+      "risk": "CRITICAL",
+      "tactics": [
+        "credential_harvesting"
+      ],
+      "required_retries": true
+    },
+    "HC-10": {
+      "scam": false,
+      "risk": "LOW",
+      "tactics": []
+    },
+    "HC-11": {
+      "scam": true,
+      "risk": "CRITICAL",
+      "tactics": [
+        "remote_access_control"
+      ]
+    },
+    "HC-12": {
+      "scam": false,
+      "risk": "LOW",
+      "tactics": []
+    }
+  }
+}
