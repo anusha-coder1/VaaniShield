@@ -5,6 +5,8 @@
 
 STAGE_PATTERNS = {
     "authority_claim": (
+        re.compile(r"\u0c28\u0c47\u0c28\u0c41\s+\u0c2c\u0c4d\u0c2f\u0c3e\u0c02\u0c15\u0c41\s+\u0c2d\u0c26\u0c4d\u0c30\u0c24\u0c3e\s+\u0c35\u0c3f\u0c2d\u0c3e\u0c17\u0c02\s+\u0c28\u0c41\u0c02\u0c21\u0c3f\s+\u0c2e\u0c3e\u0c1f\u0c4d\u0c32\u0c3e\u0c21\u0c41\u0c24\u0c41\u0c28\u0c4d\u0c28\u0c3e\u0c28\u0c41"),
+        re.compile(r"\u092e\u0948\u0902\s+(?:\u0906\u092a\u0915\u0947\s+)?\u092c\u0948\u0902\u0915\s+\u0915\u0947\s+\u0938\u0941\u0930\u0915\u094d\u0937\u093e\s+\u0935\u093f\u092d\u093e\u0917\s+\u0938\u0947\s+\u092c\u094b\u0932\s+\u0930\u0939\u093e\s+\u0939\u0942[\u0901\u0902]"),
         re.compile(r'\bcyber\s+crime\s+department\b\s+\u0c28\u0c41\u0c02\u0c1a\u0c3f\s+\u0c2e\u0c3e\u0c1f\u0c4d\u0c32\u0c3e\u0c21\u0c41\u0c24\u0c41\u0c28\u0c4d\u0c28\u0c3e\u0c28\u0c41', re.I),
         re.compile(r"साइबर अपराध विभाग से कॉल है"),
         re.compile(
@@ -197,6 +199,8 @@ STAGE_PATTERNS = {
 
 TACTIC_PATTERNS = {
     "urgency": (
+        re.compile(r"\u0c2e\u0c40\s+\u0c16\u0c3e\u0c24\u0c3e\s+\u0c08\u0c30\u0c4b\u0c1c\u0c41\s+\u0c28\u0c3f\u0c32\u0c3f\u0c2a\u0c3f\u0c35\u0c47\u0c2f\u0c2c\u0c21\u0c41\u0c24\u0c41\u0c02\u0c26\u0c3f"),
+        re.compile(r"\u0906\u092a\u0915\u093e\s+\u0916\u093e\u0924\u093e\s+\u0906\u091c\s+\u092c\u0902\u0926\s+\u0939\u094b\s+\u091c\u093e\u090f\u0917\u093e"),
         re.compile(r"तुरंत"),
         re.compile(r"अभी"),
         re.compile(r"உடனே"),
@@ -220,6 +224,7 @@ TACTIC_PATTERNS = {
         re.compile('మీ డెబిట్ కార్డు త్వరలో పనిచేయదు'),
     ),
     "credential_harvesting": (
+        re.compile(r"(?:\u0905\u092a\u0928\u093e\s+)?(?:OTP|\u0913\u091f\u0940\u092a\u0940)\s+\u092c\u0924\u093e\u0907(?:\u090f|\u092f\u0947)", re.I),
         re.compile(r"OTP\s+\u0d2a\u0d31\u0d2f\u0d42"),
         re.compile(r"OTP\s+\u0b9a\u0bca\u0bb2\u0bcd\u0bb2\u0bc1\u0b99\u0bcd\u0b95\u0bb3\u0bcd"),
         re.compile(r"OTP\s+\u092c\u0924\u093e\u0907\u090f"),
