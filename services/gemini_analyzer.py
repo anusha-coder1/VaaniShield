@@ -93,11 +93,16 @@ def analyze_with_gemini(redacted_transcript: str) -> GeminiAssessment:
 
     valid_evidence = []
     for evidence in assessment.indicator_evidence:
-        phrases = [
-            phrase
-            for phrase in evidence.exact_phrases
-            if phrase and phrase in redacted_transcript
-        ]
+        phrases = []
+        transcript_lower = redacted_transcript.lower()
+        for phrase in evidence.exact_phrases:
+            if not phrase:
+                continue
+            start = transcript_lower.find(phrase.lower())
+            if start != -1:
+                phrases.append(
+                    redacted_transcript[start:start + len(phrase)]
+                )
         if phrases and evidence.indicator in (
             assessment.stages_detected + assessment.tactics_detected
         ):
