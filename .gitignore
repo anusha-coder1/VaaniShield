@@ -7,3 +7,11 @@ __pycache__/
 # Local development backups
 *.backup
 *.pre_multilingual_backup
+
+# Local audio test recordings
+*.wav
+*.mp3
+*.m4a
+*.aac
+*.flac
+*.ogg
